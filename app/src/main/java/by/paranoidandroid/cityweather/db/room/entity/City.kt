@@ -10,3 +10,10 @@ data class City(@PrimaryKey(autoGenerate = true)
                 var country: String,
                 var temperature: String?,
                 var url: String?)
+
+data class CityJson(var id: Int,
+                    var name: String,
+                    var country: String,
+                    var temperature: String?,
+                    var url: String?)
+

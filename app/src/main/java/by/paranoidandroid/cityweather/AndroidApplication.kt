@@ -6,6 +6,8 @@ import by.paranoidandroid.cityweather.Logger.TAG
 import by.paranoidandroid.cityweather.db.parseCities
 import by.paranoidandroid.cityweather.db.room.AppDatabase
 import by.paranoidandroid.cityweather.db.room.entity.City
+import by.paranoidandroid.cityweather.db.room.entity.CityForecastRoom
+import by.paranoidandroid.cityweather.domain.entity.CityForecast
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.launch
@@ -34,7 +36,8 @@ class AndroidApplication : Application() {
      */
     private fun writeDB() {
         Log.d(TAG, "writeDB")
-        val cities: Array<City> = parseCities(this)
+        //val cities: Array<City> = parseCities(this)
+        val cities: Array<CityForecastRoom> = parseCities(this)
         cities.forEach {
             Log.d(TAG, "** ${it.name}")
         }
