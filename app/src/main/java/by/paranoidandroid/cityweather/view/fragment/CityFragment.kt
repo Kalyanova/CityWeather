@@ -49,14 +49,26 @@ class CityFragment: Fragment(), LoadingView {
 
     override fun onStartLoading() {
         Log.d(TAG, "onStartLoading")
-        progress_bar.show()
-        progress_bar.visibility = View.VISIBLE
+        progressBar.show()
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun onStopLoading() {
         Log.d(TAG, "onStopLoading")
-        progress_bar.post { progress_bar.hide() }
-        progress_bar.post { progress_bar.visibility = View.GONE }
+        progressBar.post { progressBar.hide() }
+        progressBar.post { progressBar.visibility = View.GONE }
+    }
 
+    override fun onLoadingError(errorMsg: String) {
+        Log.d(TAG, "onLoadingError")
+        tvError.post {
+            tvError.text = errorMsg
+            tvError.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onLoadingSuccess() {
+        Log.d(TAG, "onLoadingSuccess")
+        tvError.post { tvError.visibility = View.GONE }
     }
 }
