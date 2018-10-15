@@ -7,13 +7,14 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import by.paranoidandroid.cityweather.R
 import by.paranoidandroid.cityweather.db.room.AppDatabase
-import by.paranoidandroid.cityweather.view.fragment.CityFragment
+import by.paranoidandroid.cityweather.view.fragment.CitiesFragment
 import by.paranoidandroid.cityweather.view.fragment.MapFragment
 import by.paranoidandroid.cityweather.view.fragment.SettingsFragment
 
 const val TAG_1 = "TAG_1"
 const val TAG_2 = "TAG_2"
 const val TAG_3 = "TAG_3"
+const val TAG_CITY = "TAG_CITY"
 const val ARGS_ACTIVE_FRAGMENT = "ARGS_ACTIVE_FRAGMENT"
 
 class MainActivity : AppCompatActivity() {
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavView = findViewById(R.id.bottom_nav_view)
 
-        val cityFragment = CityFragment()
+        val cityFragment = CitiesFragment()
         val mapFragment = MapFragment()
         val settingsFragment = SettingsFragment()
 
@@ -50,10 +51,10 @@ class MainActivity : AppCompatActivity() {
                     .commit()
         } else {
             activeFragment = when (savedInstanceState.getString(ARGS_ACTIVE_FRAGMENT)) {
-                TAG_1 -> CityFragment()
+                TAG_1 -> CitiesFragment()
                 TAG_2 -> MapFragment()
                 TAG_3 -> SettingsFragment()
-                else -> CityFragment()
+                else -> CitiesFragment()
             }
         }
 
@@ -79,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         when (activeFragment) {
-            is CityFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_1)
+            is CitiesFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_1)
             is MapFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_2)
             is SettingsFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_3)
         }

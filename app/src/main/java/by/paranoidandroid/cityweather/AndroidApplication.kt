@@ -36,13 +36,14 @@ class AndroidApplication : Application() {
      */
     private fun writeDB() {
         Log.d(TAG, "writeDB")
-        //val cities: Array<City> = parseCities(this)
-        val cities: Array<CityForecastRoom> = parseCities(this)
+        val cities: Array<City> = parseCities(this)
+        //val cities: MutableList<CityForecastRoom> = parseCities(this)
         cities.forEach {
             Log.d(TAG, "** ${it.name}")
         }
         CoroutineScope(Dispatchers.IO).launch {
             database?.cityDao()?.insertAll(*cities)
+            //database?.cityDao()?.insertAll(*cities.toTypedArray())
         }
     }
 

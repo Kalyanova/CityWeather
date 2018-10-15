@@ -7,7 +7,7 @@ import by.paranoidandroid.cityweather.db.room.entity.CityForecastRoom
 @Dao
 interface CityDao {
 
-    /*@Query("SELECT * FROM city WHERE id=:id")
+    @Query("SELECT * FROM city WHERE id=:id")
     fun get(id: Int): City
 
     @Query("SELECT * FROM city")
@@ -20,9 +20,11 @@ interface CityDao {
     fun insert(city: City)
 
     @Delete
-    fun delete(city: City)*/
+    fun delete(city: City)
 
 
+    /*
+    // New version
     @Query("SELECT * FROM city WHERE id=:id")
     fun get(id: Int): CityForecastRoom
 
@@ -36,6 +38,6 @@ interface CityDao {
     fun insert(city: CityForecastRoom)
 
     @Delete
-    fun delete(city: CityForecastRoom)
+    fun delete(city: CityForecastRoom)*/
 
 }

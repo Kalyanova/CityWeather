@@ -1,5 +1,6 @@
 package by.paranoidandroid.cityweather.network
 
+import by.paranoidandroid.cityweather.db.room.entity.City
 import by.paranoidandroid.cityweather.network.entity.CityList
 import by.paranoidandroid.cityweather.network.entity.Forecast
 import okhttp3.OkHttpClient
@@ -23,6 +24,12 @@ object Api {
         @GET("/data/2.5/weather")
         fun getFirecast(
                 @Query("q") city: String,
+                @Query("appid") appid: String = APP_ID
+        ): Call<Forecast>
+
+        @GET("/data/2.5/weather")
+        fun getFirecast(
+                @Query("id") cityId: Int,
                 @Query("appid") appid: String = APP_ID
         ): Call<Forecast>
 
