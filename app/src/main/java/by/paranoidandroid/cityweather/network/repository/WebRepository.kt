@@ -8,16 +8,17 @@ import by.paranoidandroid.cityweather.network.entity.WebForecast
 import by.paranoidandroid.cityweather.network.utils.await
 import dagger.Module
 import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.Call
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Module
-object WebRepository {
+//@Singleton
+//@Module
+class WebRepository @Inject constructor(private val service: Api.Service) {
 
-    @Inject
-    lateinit var service: Api.Service
-
-    fun getCityForecast(id: Int): Observable<Forecast<Main>> = service.getFirecast(id)
+    // TODO: change into Single
+    fun getCityForecast(id: Int): Single<WebForecast> = service.getFirecast(id)
 
 
     /*suspend fun getCityForecast(city: String): WebForecast

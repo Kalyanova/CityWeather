@@ -7,6 +7,7 @@ import by.paranoidandroid.cityweather.network.entity.WebForecast
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -17,6 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 /**
  * Singleton for working with OpenWeatherMap api.
@@ -44,7 +46,7 @@ object Api {
         fun getFirecast(
                 @Query("id") cityId: Int,
                 @Query("appid") appid: String = APP_ID
-        ): Observable<Forecast<Main>>
+        ): Single<WebForecast>
 
         @GET("/data/2.5/group")
         fun getFirecasts(
@@ -53,6 +55,7 @@ object Api {
         ): Call<WebCityList>
     }
 
+    @Singleton
     @Provides
     fun provideRetrofit(): Retrofit {
         val logInterceptor = HttpLoggingInterceptor()
@@ -73,16 +76,9 @@ object Api {
                 .build()
     }
 
+    @Singleton
     @Provides
     fun provideService(retrofit: Retrofit): Service {
        return retrofit.create(Service::class.java)
     }
-
-    /*private val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(httpClient)
-            .build()
-
-    val service = retrofit.create(Service::class.java)*/
 }

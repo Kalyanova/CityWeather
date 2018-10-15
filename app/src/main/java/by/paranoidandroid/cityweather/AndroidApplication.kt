@@ -7,6 +7,9 @@ import by.paranoidandroid.cityweather.db.parseCities
 import by.paranoidandroid.cityweather.db.room.AppDatabase
 import by.paranoidandroid.cityweather.db.room.entity.RoomForecast
 import by.paranoidandroid.cityweather.injection.AppComponent
+import by.paranoidandroid.cityweather.injection.AppModule
+import by.paranoidandroid.cityweather.injection.DaggerAppComponent
+import by.paranoidandroid.cityweather.network.Api
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.launch
@@ -29,7 +32,7 @@ class AndroidApplication : Application() {
         instance = this
         database = AppDatabase.getAppDatabase(this)
         checkFirstLaunch()
-        //injector = buildComponent()
+        injector = buildComponent()
     }
 
     /**
@@ -42,9 +45,9 @@ class AndroidApplication : Application() {
         cities.forEach {
             Log.d(TAG, "** ${it.name}")
         }
+        // TODO: Remove coroutines
         CoroutineScope(Dispatchers.IO).launch {
             database?.cityDao()?.insertAll(*cities)
-            //database?.cityDao()?.insertAll(*cities.toTypedArray())
         }
     }
 
@@ -61,9 +64,10 @@ class AndroidApplication : Application() {
         Log.d(TAG, "checkFirstLaunch finish")
     }
 
-    /*protected fun buildComponent(): AppComponent {
-        return DaggerInjector.builder()
-                .appModule(AppModule(this))
+    protected fun buildComponent(): AppComponent {
+        return DaggerAppComponent.builder()
+                .api(Api)
+                .appModule(AppModule())
                 .build()
-    }*/
+    }
 }

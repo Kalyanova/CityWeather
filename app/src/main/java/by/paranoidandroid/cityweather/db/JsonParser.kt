@@ -24,7 +24,6 @@ fun parseFile(ctx: Context, filename: String): String {
 fun parseCities(ctx: Context): Array<RoomForecast> {
     val citiesStr = parseFile(ctx, "cities_with_temp.json")
     val cities: RoomCityList = Gson().fromJson<RoomCityList>(citiesStr, RoomCityList::class.java)
-    //val forecasts: Array<RoomForecast> =  cities.list //.map { it -> it as RoomForecast }.toTypedArray()
-    return cities.list //forecasts
+    return cities.list
 }
 
