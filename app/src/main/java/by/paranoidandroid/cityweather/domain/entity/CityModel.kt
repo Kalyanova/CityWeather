@@ -1,25 +1,19 @@
 package by.paranoidandroid.cityweather.domain.entity
 
-/*class CityModel(var id: Int,
-                var name: String,
-                var country: String,
-                var temperature: String?,
-                var url: String?)*/
+abstract class CityList<T: Forecast<*>> {
+    abstract var cnt: Int
+    abstract var list: Array<T>
+}
 
-data class CityList(
-        val cnt: Int,
-        val list: Array<CityForecast>
-)
+abstract class Forecast<M: Main>() {
+    abstract var id: Int
+    abstract var name: String
+    abstract var main: M?
+    abstract var url: String?
+}
 
-open class CityForecast(
-        var id: Int,
-        var name: String,
-        var main: Main? = null,
-        var url: String?
-)
-
-data class Main(
-        val temp: String,
-        val minTemp: String,
-        val maxTemp: String
-)
+abstract class Main {
+        abstract var temp: String?
+        abstract var minTemp: String?
+        abstract var maxTemp: String?
+}

@@ -12,6 +12,8 @@ buildscript {
         coroutines_version = '0.30.2'
         glide_version = '4.8.0'
         dagger2_version = '2.16'
+        rxjava2_version = '2.2.2'
+        rxandroid_version = '2.1.0'
     }
 
     repositories {

@@ -2,16 +2,10 @@ package by.paranoidandroid.cityweather.db
 
 import android.content.Context
 import android.util.Log
-import by.paranoidandroid.cityweather.db.Logger.TAG
-import by.paranoidandroid.cityweather.db.room.entity.City
-import by.paranoidandroid.cityweather.db.room.entity.CityForecastRoom
-import by.paranoidandroid.cityweather.domain.entity.CityForecast
-import by.paranoidandroid.cityweather.domain.entity.CityList
+import by.paranoidandroid.cityweather.Logger.TAG
+import by.paranoidandroid.cityweather.db.room.entity.RoomCityList
+import by.paranoidandroid.cityweather.db.room.entity.RoomForecast
 import com.google.gson.Gson
-
-object Logger {
-    val TAG = "JsonParser"
-}
 
 fun parseFile(ctx: Context, filename: String): String {
     try {
@@ -27,32 +21,10 @@ fun parseFile(ctx: Context, filename: String): String {
     }
 }
 
-fun parseCities(ctx: Context): Array<City> {
-    val citiesStr = parseFile(ctx, "cities.json")
-    val cities: Array<City> = Gson().fromJson<Array<City>>(citiesStr, Array<City>::class.java)
-    cities.forEach {
-        Log.d(TAG, "$it")
-    }
-    return cities
+fun parseCities(ctx: Context): Array<RoomForecast> {
+    val citiesStr = parseFile(ctx, "cities_with_temp.json")
+    val cities: RoomCityList = Gson().fromJson<RoomCityList>(citiesStr, RoomCityList::class.java)
+    //val forecasts: Array<RoomForecast> =  cities.list //.map { it -> it as RoomForecast }.toTypedArray()
+    return cities.list //forecasts
 }
-
-/*
-//New version
-fun parseCities(ctx: Context): MutableList<CityForecastRoom> { //Array<City> {
-    val citiesStr = parseFile(ctx, "cities_with_temp.json") //val citiesStr = parseFile(ctx, "cities.json")
-    //val cities: Array<City> = Gson().fromJson<Array<City>>(citiesStr, Array<City>::class.java)
-    val citiesJson: CityList = Gson().fromJson<CityList>(citiesStr, CityList::class.java)
-    //val cities: Array<CityForecastRoom>
-
-    val cities = MutableList<CityForecastRoom>(
-            size = citiesJson.cnt,
-            init = { index -> citiesJson.list[index] as CityForecastRoom }
-    )
-    //var cities = citiesJson.list
-    citiesJson.list.forEach {
-        Log.d(TAG, "$it")
-    }
-    return cities
-}
-*/
 

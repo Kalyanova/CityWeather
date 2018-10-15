@@ -8,9 +8,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import by.paranoidandroid.cityweather.Logger.TAG
 import by.paranoidandroid.cityweather.R
-import by.paranoidandroid.cityweather.db.Logger.TAG
-import by.paranoidandroid.cityweather.db.room.entity.City
+import by.paranoidandroid.cityweather.domain.entity.Forecast
+import by.paranoidandroid.cityweather.domain.entity.Main
 import by.paranoidandroid.cityweather.view.LoadingView
 import by.paranoidandroid.cityweather.view.adapter.CityAdapter
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModel
@@ -27,7 +28,7 @@ class CitiesFragment: Fragment(), LoadingView {
         view.recyclerViewCities.layoutManager = LinearLayoutManager(context)
 
         val cityVM = CitiesViewModel(this)
-        cityVM.cities.observe(this, object : Observer<List<City>> {
+        /*cityVM.cities.observe(this, object : Observer<List<City>> {
             override fun onChanged(cityList: List<City>?) {
                 Log.d(TAG, "onChanged in CityFragment")
                 if (cityList != null) {
@@ -35,15 +36,36 @@ class CitiesFragment: Fragment(), LoadingView {
                     cityAdapter.updateItems(cityList)
                 }
             }
+        })*/
+        /*cityVM.cities.observe(this, object : Observer<List<Forecast>> {
+            override fun onChanged(cityList: List<Forecast>?) {
+                Log.d(TAG, "onChanged in CityFragment")
+                if (cityList != null) {
+                    Log.d(TAG, "onChanged and cityList != null")
+                    cityAdapter.updateItems(cityList)
+                }
+            }
+        })*/
+
+        cityVM.cities.observe(this, object : Observer<List<Forecast<Main>>> {
+            override fun onChanged(cityList: List<Forecast<Main>>?) {
+                Log.d(TAG, "onChanged in CityFragment")
+                if (cityList != null) {
+                    Log.d(TAG, "onChanged and cityList != null")
+                    cityAdapter.updateItems(cityList)
+                }
+            }
         })
+
         cityVM.getCitiesFromDB()
 
-        /*cityVM.forecast.observe(this, object : Observer<Forecast> {
-            override fun onChanged(forecast: Forecast?) {
+        /*cityVM.forecast.observe(this, object : Observer<RoomForecast> {
+            override fun onChanged(forecast: RoomForecast?) {
                 view.tvTemp.text = forecast?.main?.temp
             }
         })
         cityVM.updateForecast("London")*/
+
         return view
     }
 

@@ -1,43 +1,23 @@
 package by.paranoidandroid.cityweather.db.room.dao
 
 import android.arch.persistence.room.*
-import by.paranoidandroid.cityweather.db.room.entity.City
-import by.paranoidandroid.cityweather.db.room.entity.CityForecastRoom
+import by.paranoidandroid.cityweather.db.room.entity.RoomForecast
 
 @Dao
 interface CityDao {
 
     @Query("SELECT * FROM city WHERE id=:id")
-    fun get(id: Int): City
+    fun get(id: Int): RoomForecast
 
     @Query("SELECT * FROM city")
-    fun getAll(): List<City>
+    fun getAll(): List<RoomForecast>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg city: City)
+    fun insertAll(vararg city: RoomForecast)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(city: City)
+    fun insert(city: RoomForecast)
 
     @Delete
-    fun delete(city: City)
-
-
-    /*
-    // New version
-    @Query("SELECT * FROM city WHERE id=:id")
-    fun get(id: Int): CityForecastRoom
-
-    @Query("SELECT * FROM city")
-    fun getAll(): List<CityForecastRoom>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg city: CityForecastRoom)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(city: CityForecastRoom)
-
-    @Delete
-    fun delete(city: CityForecastRoom)*/
-
+    fun delete(city: RoomForecast)
 }
