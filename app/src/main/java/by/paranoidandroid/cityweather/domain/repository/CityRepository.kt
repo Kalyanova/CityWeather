@@ -58,8 +58,12 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
         return data
     }
 
+    /**
+     * @param ids: identifiers of cities
+     * @param oldValues is here to update LiveData only if result isn't null.
+     */
     @Suppress(UNCHECKED_CAST)
-    fun getForecastsFromNetwork(ids: String): LiveData<ForecastList> {
+    fun getForecastsFromNetwork(ids: String, oldValues: ForecastList?): LiveData<ForecastList> {
         Log.d(TAG, "getForecastsFromNetwork")
         val data = MutableLiveData<ForecastList>()
         val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -73,12 +77,11 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
                                 Log.d(TAG, "onSuccess, new data, count: ${forecastList.cnt}")
                                 val result = forecastList.list.asList() as ForecastList
                                 data.postValue(result)
-                                // TODO: save data into database
                                 val roomForecasts = Array(result.size, init = { index ->
                                     val item = result[index]
                                     val coord = RoomCoord(item.coord?.lon, item.coord?.lat)
                                     val main = RoomMain(item.main?.temp, item.main?.minTemp, item.main?.maxTemp)
-                                    // TODO: not update url
+                                    // TODO: not update url - create another Room table with static data for city
                                     RoomForecast(item.id, item.name, coord, main, item.url)
                                 })
 
@@ -107,8 +110,11 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
                             },
                             { throwable ->
                                 Log.e(TAG, "Network error: ${throwable}")
+                                data.postValue(oldValues)
                             }
                     )
+        } else {
+            data.postValue(oldValues)
         }
         return data
     }
