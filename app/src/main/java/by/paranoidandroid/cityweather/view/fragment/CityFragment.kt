@@ -10,7 +10,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import by.paranoidandroid.cityweather.AndroidApplication
 import by.paranoidandroid.cityweather.R
-import by.paranoidandroid.cityweather.network.entity.WebForecast
+import by.paranoidandroid.cityweather.Utils.formatDegrees
+import by.paranoidandroid.cityweather.domain.entity.Coord
+import by.paranoidandroid.cityweather.domain.entity.Forecast
+import by.paranoidandroid.cityweather.domain.entity.Main
 import by.paranoidandroid.cityweather.viewmodel.CityViewModel
 import by.paranoidandroid.cityweather.viewmodel.CityViewModelFactory
 import javax.inject.Inject
@@ -41,10 +44,9 @@ class CityFragment: Fragment() {
         AndroidApplication.injector.inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CityViewModel::class.java)
         id?.let { viewModel?.init(id) }
-        viewModel?.getForecast()?.observe(this, object : Observer<WebForecast> {
-            override fun onChanged(t: WebForecast?) {
-                tvCityName?.text = viewModel?.getForecast()?.value?.name
-                tvWeather?.text = viewModel?.getForecast()?.value?.main?.temp
+        viewModel?.getForecast()?.observe(this, object : Observer<Forecast<Main, Coord>>{
+            override fun onChanged(t: Forecast<Main, Coord>?) {
+                updateUI()
             }
         })
     }
@@ -53,8 +55,17 @@ class CityFragment: Fragment() {
         val view =  inflater.inflate(R.layout.fragment_city, container, false)
         tvCityName = view.findViewById(R.id.tv_city_name) as TextView
         tvWeather = view.findViewById(R.id.tv_weather) as TextView
-        tvCityName?.text = viewModel?.getForecast()?.value?.name
-        tvWeather?.text = viewModel?.getForecast()?.value?.main?.temp
+        updateUI()
         return view
+    }
+
+    private fun updateUI() {
+        tvCityName?.text = viewModel?.getForecast()?.value?.name
+        tvWeather?.text = formatDegrees(viewModel?.getForecast()?.value?.main?.temp)
+    }
+
+    override fun onPause() {
+        viewModel?.dispose()
+        super.onPause()
     }
 }

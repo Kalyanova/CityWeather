@@ -35,6 +35,7 @@ dependencies {
 
     implementation "android.arch.persistence.room:common:$room_version"
     implementation "android.arch.persistence.room:runtime:$room_version"
+    implementation "android.arch.persistence.room:rxjava2:$room_version"
     kapt "android.arch.persistence.room:compiler:$room_version"
 
     implementation "com.squareup.okhttp3:okhttp:$ok_http_version"

@@ -2,13 +2,14 @@ package by.paranoidandroid.cityweather
 
 import android.app.Application
 import android.util.Log
-import by.paranoidandroid.cityweather.Logger.TAG
+import by.paranoidandroid.cityweather.Utils.TAG
 import by.paranoidandroid.cityweather.db.parseCities
 import by.paranoidandroid.cityweather.db.room.AppDatabase
 import by.paranoidandroid.cityweather.db.room.entity.RoomForecast
 import by.paranoidandroid.cityweather.injection.AppComponent
 import by.paranoidandroid.cityweather.injection.AppModule
 import by.paranoidandroid.cityweather.injection.DaggerAppComponent
+import by.paranoidandroid.cityweather.injection.RoomModule
 import by.paranoidandroid.cityweather.network.Api
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
@@ -41,16 +42,17 @@ class AndroidApplication : Application() {
      */
     private fun writeDB() {
         Log.d(TAG, "writeDB")
-        val cities: Array<RoomForecast> = parseCities(this) //val cities: Array<City> = parseCities(this)
-        cities.forEach {
-            Log.d(TAG, "** ${it.name}")
-        }
+        val cities: Array<RoomForecast> = parseCities(this)
         // TODO: Remove coroutines
         CoroutineScope(Dispatchers.IO).launch {
             database?.cityDao()?.insertAll(*cities)
         }
     }
 
+    /**
+     * Checks whether this is the first launch, and if it's true,
+     * parses json file from assets and write data to database.
+     */
     private fun checkFirstLaunch() {
         val prefs = this.getSharedPreferences(PREFS_FILENAME, 0)
         val firstLaunch = prefs.getBoolean(FIRST_LAUNCH, true)
@@ -61,13 +63,13 @@ class AndroidApplication : Application() {
                     .putBoolean(FIRST_LAUNCH, false)
                     .apply()
         }
-        Log.d(TAG, "checkFirstLaunch finish")
     }
 
     protected fun buildComponent(): AppComponent {
         return DaggerAppComponent.builder()
                 .api(Api)
                 .appModule(AppModule())
+                .roomModule(RoomModule(this))
                 .build()
     }
 }

@@ -1,6 +1,7 @@
 package by.paranoidandroid.cityweather.view.fragment
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -8,17 +9,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import by.paranoidandroid.cityweather.Logger.TAG
+import by.paranoidandroid.cityweather.AndroidApplication
 import by.paranoidandroid.cityweather.R
+import by.paranoidandroid.cityweather.Utils.TAG
+import by.paranoidandroid.cityweather.domain.entity.Coord
 import by.paranoidandroid.cityweather.domain.entity.Forecast
 import by.paranoidandroid.cityweather.domain.entity.Main
 import by.paranoidandroid.cityweather.view.LoadingView
 import by.paranoidandroid.cityweather.view.adapter.CityAdapter
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModel
+import by.paranoidandroid.cityweather.viewmodel.CitiesViewModelFactory
 import kotlinx.android.synthetic.main.fragment_cities.*
 import kotlinx.android.synthetic.main.fragment_cities.view.*
+import javax.inject.Inject
 
 class CitiesFragment: Fragment(), LoadingView {
+    @Inject
+    lateinit var viewModelFactory: CitiesViewModelFactory
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_cities, container, false)
@@ -27,45 +34,17 @@ class CitiesFragment: Fragment(), LoadingView {
         view.recyclerViewCities.adapter = cityAdapter
         view.recyclerViewCities.layoutManager = LinearLayoutManager(context)
 
-        val cityVM = CitiesViewModel(this)
-        /*cityVM.cities.observe(this, object : Observer<List<City>> {
-            override fun onChanged(cityList: List<City>?) {
-                Log.d(TAG, "onChanged in CityFragment")
-                if (cityList != null) {
-                    Log.d(TAG, "onChanged and cityList != null")
-                    cityAdapter.updateItems(cityList)
-                }
-            }
-        })*/
-        /*cityVM.cities.observe(this, object : Observer<List<Forecast>> {
-            override fun onChanged(cityList: List<Forecast>?) {
-                Log.d(TAG, "onChanged in CityFragment")
-                if (cityList != null) {
-                    Log.d(TAG, "onChanged and cityList != null")
-                    cityAdapter.updateItems(cityList)
-                }
-            }
-        })*/
-
-        cityVM.cities.observe(this, object : Observer<List<Forecast<Main>>> {
-            override fun onChanged(cityList: List<Forecast<Main>>?) {
-                Log.d(TAG, "onChanged in CityFragment")
+        AndroidApplication.injector.inject(this)
+        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(CitiesViewModel::class.java)
+        viewModel.cities?.observe(this, object : Observer<List<Forecast<Main, Coord>>> {
+            override fun onChanged(cityList: List<Forecast<Main, Coord>>?) {
+                Log.d(TAG, "onChanged in CitiesFragment")
                 if (cityList != null) {
                     Log.d(TAG, "onChanged and cityList != null")
                     cityAdapter.updateItems(cityList)
                 }
             }
         })
-
-        cityVM.getCitiesFromDB()
-
-        /*cityVM.forecast.observe(this, object : Observer<RoomForecast> {
-            override fun onChanged(forecast: RoomForecast?) {
-                view.tvTemp.text = forecast?.main?.temp
-            }
-        })
-        cityVM.updateForecast("London")*/
-
         return view
     }
 

@@ -14,7 +14,6 @@ import by.paranoidandroid.cityweather.view.fragment.SettingsFragment
 const val TAG_1 = "TAG_1"
 const val TAG_2 = "TAG_2"
 const val TAG_3 = "TAG_3"
-const val TAG_CITY = "TAG_CITY"
 const val ARGS_ACTIVE_FRAGMENT = "ARGS_ACTIVE_FRAGMENT"
 
 class MainActivity : AppCompatActivity() {

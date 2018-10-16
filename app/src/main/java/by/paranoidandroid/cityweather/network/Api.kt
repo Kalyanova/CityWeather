@@ -1,17 +1,11 @@
 package by.paranoidandroid.cityweather.network
 
-import by.paranoidandroid.cityweather.domain.entity.Forecast
-import by.paranoidandroid.cityweather.domain.entity.Main
 import by.paranoidandroid.cityweather.network.entity.WebCityList
 import by.paranoidandroid.cityweather.network.entity.WebForecast
-import dagger.Module
-import dagger.Provides
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -19,10 +13,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import dagger.Module
+import dagger.Provides
 
-/**
- * Singleton for working with OpenWeatherMap api.
- */
 @Module
 object Api {
     const val BASE_URL = "https://api.openweathermap.org"
@@ -34,13 +27,7 @@ object Api {
         fun getFirecast(
                 @Query("q") city: String,
                 @Query("appid") appid: String = APP_ID
-        ): Call<WebForecast>
-
-        /*@GET("/data/2.5/weather")
-        fun getFirecast(
-                @Query("id") cityId: Int,
-                @Query("appid") appid: String = APP_ID
-        ): Call<WebForecast>*/
+        ): Single<WebForecast>
 
         @GET("/data/2.5/weather")
         fun getFirecast(
@@ -50,9 +37,9 @@ object Api {
 
         @GET("/data/2.5/group")
         fun getFirecasts(
-                @Query("id", encoded = true) id: String,
+                @Query("id", encoded = true) ids: String,
                 @Query("appid") appid: String = APP_ID
-        ): Call<WebCityList>
+        ): Single<WebCityList>
     }
 
     @Singleton

@@ -2,28 +2,28 @@ package by.paranoidandroid.cityweather.viewmodel
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import android.util.Log
-import by.paranoidandroid.cityweather.AndroidApplication
-import by.paranoidandroid.cityweather.Logger.TAG
-import by.paranoidandroid.cityweather.domain.repository.CityRepository
-import by.paranoidandroid.cityweather.network.entity.WebForecast
-import javax.inject.Inject
 import android.arch.lifecycle.ViewModelProvider
+import by.paranoidandroid.cityweather.domain.entity.Coord
+import by.paranoidandroid.cityweather.domain.entity.Forecast
+import by.paranoidandroid.cityweather.domain.entity.Main
+import by.paranoidandroid.cityweather.domain.repository.CityRepository
+import javax.inject.Inject
 
 class CityViewModel @Inject constructor(val cityRepository: CityRepository) : ViewModel() {
-    private var forecast: LiveData<WebForecast>? = null
+    private var forecast: LiveData<Forecast<Main, Coord>> ? = null
 
     fun init(id: Int) {
-        Log.d(TAG, "CityViewModel init")
         if (this.forecast != null) {
-            // ViewModel is created on a per-Fragment basis,
-            // so the cityId doesn't change.
             return
         }
         forecast = cityRepository.getForecast(id)
     }
 
     fun getForecast() = forecast
+
+    fun dispose() {
+        cityRepository.dispose()
+    }
 }
 
 class CityViewModelFactory @Inject constructor(val cityRepository: CityRepository) : ViewModelProvider.NewInstanceFactory() {
