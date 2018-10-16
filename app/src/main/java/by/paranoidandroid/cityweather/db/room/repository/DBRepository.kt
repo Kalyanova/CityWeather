@@ -10,4 +10,6 @@ class DBRepository @Inject constructor(private val cityDao: CityDao) {
     fun getCityForecast(id: Int): Single<RoomForecast> = cityDao.get(id)
 
     fun getForecasts(): Single<List<RoomForecast>> = cityDao.getAll()
+
+    fun update(vararg forecast: RoomForecast) = cityDao.insertAll(*forecast)
 }

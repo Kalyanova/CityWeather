@@ -36,7 +36,7 @@ class CitiesFragment: Fragment(), LoadingView {
 
         AndroidApplication.injector.inject(this)
         val viewModel = ViewModelProviders.of(this, viewModelFactory).get(CitiesViewModel::class.java)
-        viewModel.cities?.observe(this, object : Observer<List<Forecast<Main, Coord>>> {
+        viewModel.getForecasts()?.observe(this, object : Observer<List<Forecast<Main, Coord>>> {
             override fun onChanged(cityList: List<Forecast<Main, Coord>>?) {
                 Log.d(TAG, "onChanged in CitiesFragment")
                 if (cityList != null) {

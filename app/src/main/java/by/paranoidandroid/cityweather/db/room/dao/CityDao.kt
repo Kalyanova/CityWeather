@@ -14,11 +14,11 @@ interface CityDao {
     fun getAll(): Single<List<RoomForecast>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg city: RoomForecast)
+    fun insertAll(vararg forecast: RoomForecast)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(city: RoomForecast)
+    fun insert(forecast: RoomForecast)
 
     @Delete
-    fun delete(city: RoomForecast)
+    fun delete(forecast: RoomForecast)
 }

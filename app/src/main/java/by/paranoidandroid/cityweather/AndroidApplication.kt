@@ -68,7 +68,7 @@ class AndroidApplication : Application() {
     protected fun buildComponent(): AppComponent {
         return DaggerAppComponent.builder()
                 .api(Api)
-                .appModule(AppModule())
+                .appModule(AppModule(this))
                 .roomModule(RoomModule(this))
                 .build()
     }
