@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import by.paranoidandroid.cityweather.AndroidApplication
 import by.paranoidandroid.cityweather.R
-import by.paranoidandroid.cityweather.Utils.TAG
+import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.domain.entity.Coord
 import by.paranoidandroid.cityweather.domain.entity.Forecast
 import by.paranoidandroid.cityweather.domain.entity.Main
@@ -38,9 +38,9 @@ class CitiesFragment: Fragment(), LoadingView {
         val viewModel = ViewModelProviders.of(this, viewModelFactory).get(CitiesViewModel::class.java)
         viewModel.getForecasts()?.observe(this, object : Observer<List<Forecast<Main, Coord>>> {
             override fun onChanged(cityList: List<Forecast<Main, Coord>>?) {
-                Log.d(TAG, "onChanged in CitiesFragment")
+                Log.d(LOG_TAG, "onChanged in CitiesFragment")
                 if (cityList != null) {
-                    Log.d(TAG, "onChanged and cityList != null")
+                    Log.d(LOG_TAG, "onChanged and cityList != null")
                     cityAdapter.updateItems(cityList)
                 }
             }
@@ -49,19 +49,19 @@ class CitiesFragment: Fragment(), LoadingView {
     }
 
     override fun onStartLoading() {
-        Log.d(TAG, "onStartLoading")
+        Log.d(LOG_TAG, "onStartLoading")
         progressBar.show()
         progressBar.visibility = View.VISIBLE
     }
 
     override fun onStopLoading() {
-        Log.d(TAG, "onStopLoading")
+        Log.d(LOG_TAG, "onStopLoading")
         progressBar.post { progressBar.hide() }
         progressBar.post { progressBar.visibility = View.GONE }
     }
 
     override fun onLoadingError(errorMsg: String) {
-        Log.d(TAG, "onLoadingError")
+        Log.d(LOG_TAG, "onLoadingError")
         tvError.post {
             tvError.text = errorMsg
             tvError.visibility = View.VISIBLE
@@ -69,7 +69,7 @@ class CitiesFragment: Fragment(), LoadingView {
     }
 
     override fun onLoadingSuccess() {
-        Log.d(TAG, "onLoadingSuccess")
+        Log.d(LOG_TAG, "onLoadingSuccess")
         tvError.post { tvError.visibility = View.GONE }
     }
 }

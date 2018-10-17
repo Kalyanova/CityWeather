@@ -2,7 +2,7 @@ package by.paranoidandroid.cityweather
 
 import android.app.Application
 import android.util.Log
-import by.paranoidandroid.cityweather.Utils.TAG
+import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.db.parseCities
 import by.paranoidandroid.cityweather.db.room.AppDatabase
 import by.paranoidandroid.cityweather.db.room.entity.RoomForecast
@@ -15,11 +15,11 @@ import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.launch
 
-const val PREFS_FILENAME = "APP_PREFS"
-const val FIRST_LAUNCH = "FIRST_LAUNCH"
-
 class AndroidApplication : Application() {
     companion object {
+        const val PREFS_FILENAME = "APP_PREFS"
+        const val FIRST_LAUNCH = "FIRST_LAUNCH"
+
         lateinit var instance: AndroidApplication
             private set
 
@@ -41,7 +41,7 @@ class AndroidApplication : Application() {
      * and if yes, load data to database from json file.
      */
     private fun writeDB() {
-        Log.d(TAG, "writeDB")
+        Log.d(LOG_TAG, "writeDB")
         val cities: Array<RoomForecast> = parseCities(this)
         // TODO: Remove coroutines
         CoroutineScope(Dispatchers.IO).launch {
@@ -57,7 +57,7 @@ class AndroidApplication : Application() {
         val prefs = this.getSharedPreferences(PREFS_FILENAME, 0)
         val firstLaunch = prefs.getBoolean(FIRST_LAUNCH, true)
         if (firstLaunch) {
-            Log.d(TAG, "First launch")
+            Log.d(LOG_TAG, "First launch")
             writeDB()
             prefs.edit()
                     .putBoolean(FIRST_LAUNCH, false)

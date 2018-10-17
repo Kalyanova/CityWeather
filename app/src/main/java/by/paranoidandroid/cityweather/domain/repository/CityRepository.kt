@@ -6,7 +6,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.util.Log
 import by.paranoidandroid.cityweather.ForecastList
-import by.paranoidandroid.cityweather.Utils.TAG
+import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.Utils.UNCHECKED_CAST
 import by.paranoidandroid.cityweather.db.room.entity.RoomCoord
 import by.paranoidandroid.cityweather.db.room.entity.RoomForecast
@@ -36,21 +36,21 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                         { forecast ->
-                            Log.d(TAG, "onSuccess ${forecast.name}")
+                            Log.d(LOG_TAG, "onSuccess ${forecast.name}")
                             data.postValue(forecast as Forecast<Main, Coord>)
                         },
                         { throwable ->
-                            Log.e(TAG, "Network error: ${throwable}")
+                            Log.e(LOG_TAG, "Network error: ${throwable}")
                             dbRepository.getCityForecast(id)
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribeOn(Schedulers.io())
                                     .subscribe(
                                             { dbforecast ->
-                                                Log.d(TAG, "onSuccess ${dbforecast.name}")
+                                                Log.d(LOG_TAG, "onSuccess ${dbforecast.name}")
                                                 data.postValue(dbforecast as Forecast<Main, Coord>)
                                             },
                                             { dbthrowable ->
-                                                Log.e(TAG, "Database error: ${dbthrowable}")
+                                                Log.e(LOG_TAG, "Database error: ${dbthrowable}")
 
                                             })
                         }
@@ -64,7 +64,7 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
      */
     @Suppress(UNCHECKED_CAST)
     fun getForecastsFromNetwork(ids: String, oldValues: ForecastList?): LiveData<ForecastList> {
-        Log.d(TAG, "getForecastsFromNetwork")
+        Log.d(LOG_TAG, "getForecastsFromNetwork")
         val data = MutableLiveData<ForecastList>()
         val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connManager.activeNetworkInfo
@@ -74,7 +74,7 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
                     .subscribeOn(Schedulers.io())
                     .subscribe(
                             { forecastList ->
-                                Log.d(TAG, "onSuccess, new data, count: ${forecastList.cnt}")
+                                Log.d(LOG_TAG, "onSuccess, new data, count: ${forecastList.cnt}")
                                 val result = forecastList.list.asList() as ForecastList
                                 data.postValue(result)
                                 val roomForecasts = Array(result.size, init = { index ->
@@ -90,26 +90,26 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
                                 // TODO: is it necessary to do all rx flows disposable to dispose it?
                                 dbDisposable = Completable
                                         .fromAction {
-                                            Log.d(TAG, "DB updating...")
+                                            Log.d(LOG_TAG, "DB updating...")
                                             dbRepository.update(*roomForecasts)
                                         }
                                         .subscribeOn(Schedulers.io())
                                         .subscribeWith(object : DisposableCompletableObserver() {
                                             public override fun onStart() {
-                                                Log.d(TAG, "DB update started")
+                                                Log.d(LOG_TAG, "DB update started")
                                             }
 
                                             override fun onError(ex: Throwable) {
-                                                Log.e(TAG, "DB update error!", ex)
+                                                Log.e(LOG_TAG, "DB update error!", ex)
                                             }
 
                                             override fun onComplete() {
-                                                Log.d(TAG, "DB update done!")
+                                                Log.d(LOG_TAG, "DB update done!")
                                             }
                                         })
                             },
                             { throwable ->
-                                Log.e(TAG, "Network error: ${throwable}")
+                                Log.e(LOG_TAG, "Network error: ${throwable}")
                                 data.postValue(oldValues)
                             }
                     )
@@ -121,18 +121,18 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
 
     @Suppress(UNCHECKED_CAST)
     fun getForecastsFromDB(): LiveData<ForecastList> {
-        Log.d(TAG, "getForecastsFromDB")
+        Log.d(LOG_TAG, "getForecastsFromDB")
         val data = MutableLiveData<ForecastList>()
         disposable = dbRepository.getForecasts()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                         { forecasts ->
-                            Log.d(TAG, "onSuccess, count: ${forecasts.size}")
+                            Log.d(LOG_TAG, "onSuccess, count: ${forecasts.size}")
                             data.postValue(forecasts as ForecastList)
                         },
                         { throwable ->
-                            Log.e(TAG, "Database error: ${throwable}")
+                            Log.e(LOG_TAG, "Database error: ${throwable}")
                         }
                 )
         return data

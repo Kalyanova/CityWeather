@@ -6,18 +6,16 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import by.paranoidandroid.cityweather.R
+import by.paranoidandroid.cityweather.Utils.ARGS_ACTIVE_FRAGMENT
+import by.paranoidandroid.cityweather.Utils.TAG_1_TAB
+import by.paranoidandroid.cityweather.Utils.TAG_2_TAB
+import by.paranoidandroid.cityweather.Utils.TAG_3_TAB
 import by.paranoidandroid.cityweather.db.room.AppDatabase
 import by.paranoidandroid.cityweather.view.fragment.CitiesFragment
 import by.paranoidandroid.cityweather.view.fragment.MapFragment
 import by.paranoidandroid.cityweather.view.fragment.SettingsFragment
 
-const val TAG_1 = "TAG_1"
-const val TAG_2 = "TAG_2"
-const val TAG_3 = "TAG_3"
-const val ARGS_ACTIVE_FRAGMENT = "ARGS_ACTIVE_FRAGMENT"
-
 class MainActivity : AppCompatActivity() {
-
     val fm: FragmentManager = supportFragmentManager
     var bottomNavView: BottomNavigationView? = null
     var activeFragment: Fragment? = null
@@ -36,23 +34,23 @@ class MainActivity : AppCompatActivity() {
             activeFragment = cityFragment
 
             fm.beginTransaction()
-                    .add(R.id.main_container, cityFragment, TAG_1)
+                    .add(R.id.main_container, cityFragment, TAG_1_TAB)
                     .commit()
 
             fm.beginTransaction()
-                    .add(R.id.main_container, mapFragment, TAG_2)
+                    .add(R.id.main_container, mapFragment, TAG_2_TAB)
                     .hide(mapFragment)
                     .commit()
 
             fm.beginTransaction()
-                    .add(R.id.main_container, settingsFragment, TAG_3)
+                    .add(R.id.main_container, settingsFragment, TAG_3_TAB)
                     .hide(settingsFragment)
                     .commit()
         } else {
             activeFragment = when (savedInstanceState.getString(ARGS_ACTIVE_FRAGMENT)) {
-                TAG_1 -> CitiesFragment()
-                TAG_2 -> MapFragment()
-                TAG_3 -> SettingsFragment()
+                TAG_1_TAB -> CitiesFragment()
+                TAG_2_TAB -> MapFragment()
+                TAG_3_TAB -> SettingsFragment()
                 else -> CitiesFragment()
             }
         }
@@ -79,9 +77,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         when (activeFragment) {
-            is CitiesFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_1)
-            is MapFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_2)
-            is SettingsFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_3)
+            is CitiesFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_1_TAB)
+            is MapFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_2_TAB)
+            is SettingsFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_3_TAB)
         }
         super.onSaveInstanceState(outState)
     }

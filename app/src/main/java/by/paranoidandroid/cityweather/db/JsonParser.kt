@@ -2,7 +2,7 @@ package by.paranoidandroid.cityweather.db
 
 import android.content.Context
 import android.util.Log
-import by.paranoidandroid.cityweather.Utils.TAG
+import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.db.room.entity.RoomCityList
 import by.paranoidandroid.cityweather.db.room.entity.RoomForecast
 import com.google.gson.Gson
@@ -16,7 +16,7 @@ fun parseFile(ctx: Context, filename: String): String {
         inputStream.close()
         return String(buffer)
     } catch (e: Exception) {
-        Log.e(TAG, "Exception: ", e)
+        Log.e(LOG_TAG, "Exception: ", e)
         return ""
     }
 }

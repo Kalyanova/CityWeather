@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class WebRepository @Inject constructor(private val service: Api.Service) {
 
-    fun getCityForecast(id: Int): Single<WebForecast> = service.getFirecast(id)
+    fun getCityForecast(id: Int): Single<WebForecast> = service.getForecast(id)
 
-    fun getForecasts(ids: String): Single<WebCityList> = service.getFirecasts(ids)
+    fun getForecasts(ids: String): Single<WebCityList> = service.getForecasts(ids)
 }
