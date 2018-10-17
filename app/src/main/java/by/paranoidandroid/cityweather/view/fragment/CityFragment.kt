@@ -20,8 +20,8 @@ import javax.inject.Inject
 
 class CityFragment: Fragment() {
     private var viewModel: CityViewModel? = null
-    var tvCityName: TextView? = null
-    var tvWeather: TextView? = null
+    private var tvCityName: TextView? = null
+    private var tvWeather: TextView ? = null
 
     @Inject
     lateinit var viewModelFactory: CityViewModelFactory
@@ -38,17 +38,17 @@ class CityFragment: Fragment() {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         val id = arguments?.getInt(UID_KEY)
         AndroidApplication.injector.inject(this)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(CityViewModel::class.java)
+        viewModel = ViewModelProviders.of(
+                this,
+                viewModelFactory
+        ).get(CityViewModel::class.java)
         id?.let { viewModel?.init(id) }
-        viewModel?.getForecast()?.observe(this, object : Observer<Forecast<Main, Coord>>{
-            override fun onChanged(t: Forecast<Main, Coord>?) {
-                updateUI()
-            }
-        })
+        viewModel?.getForecast()
+                ?.observe(this, Observer<Forecast<Main, Coord>> { updateUI() })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

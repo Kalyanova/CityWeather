@@ -16,16 +16,6 @@ import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.launch
 
 class AndroidApplication : Application() {
-    companion object {
-        const val PREFS_FILENAME = "APP_PREFS"
-        const val FIRST_LAUNCH = "FIRST_LAUNCH"
-
-        lateinit var instance: AndroidApplication
-            private set
-
-        lateinit var injector: AppComponent
-    }
-
     var database: AppDatabase? = null
 
     override fun onCreate() {
@@ -71,5 +61,15 @@ class AndroidApplication : Application() {
                 .appModule(AppModule(this))
                 .roomModule(RoomModule(this))
                 .build()
+    }
+
+    companion object {
+        const val PREFS_FILENAME = "APP_PREFS"
+        const val FIRST_LAUNCH = "FIRST_LAUNCH"
+
+        lateinit var instance: AndroidApplication
+            private set
+
+        lateinit var injector: AppComponent
     }
 }

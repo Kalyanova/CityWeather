@@ -6,6 +6,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.util.Log
 import by.paranoidandroid.cityweather.ForecastList
+import by.paranoidandroid.cityweather.Utils
 import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.Utils.UNCHECKED_CAST
 import by.paranoidandroid.cityweather.db.room.entity.RoomCoord
@@ -16,6 +17,7 @@ import by.paranoidandroid.cityweather.domain.entity.Coord
 import by.paranoidandroid.cityweather.domain.entity.Forecast
 import by.paranoidandroid.cityweather.domain.entity.Main
 import by.paranoidandroid.cityweather.network.repository.WebRepository
+import by.paranoidandroid.cityweather.viewmodel.CitiesViewModel
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -63,9 +65,11 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
      * @param oldValues is here to update LiveData only if result isn't null.
      */
     @Suppress(UNCHECKED_CAST)
-    fun getForecastsFromNetwork(ids: String, oldValues: ForecastList?): LiveData<ForecastList> {
+    fun getForecastsFromNetwork(ids: String, oldValues: ForecastList): MutableLiveData<ForecastList> {
         Log.d(LOG_TAG, "getForecastsFromNetwork")
         val data = MutableLiveData<ForecastList>()
+
+        //var res: ForecastList? = null
         val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connManager.activeNetworkInfo
         if (networkInfo != null && networkInfo.isConnected) {
@@ -77,6 +81,12 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
                                 Log.d(LOG_TAG, "onSuccess, new data, count: ${forecastList.cnt}")
                                 val result = forecastList.list.asList() as ForecastList
                                 data.postValue(result)
+
+                                result.forEach {
+                                    Log.d(LOG_TAG, "onSuccess: *** ${it.name} and ${Utils.formatDegrees(it.main?.temp)}")
+                                }
+
+
                                 val roomForecasts = Array(result.size, init = { index ->
                                     val item = result[index]
                                     val coord = RoomCoord(item.coord?.lon, item.coord?.lat)
@@ -114,13 +124,14 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
                             }
                     )
         } else {
+            Log.d(LOG_TAG, "No connection available")
             data.postValue(oldValues)
         }
         return data
     }
 
     @Suppress(UNCHECKED_CAST)
-    fun getForecastsFromDB(): LiveData<ForecastList> {
+    fun getForecastsFromDB(): MutableLiveData<ForecastList> {
         Log.d(LOG_TAG, "getForecastsFromDB")
         val data = MutableLiveData<ForecastList>()
         disposable = dbRepository.getForecasts()

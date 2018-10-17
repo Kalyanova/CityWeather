@@ -10,11 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import by.paranoidandroid.cityweather.AndroidApplication
+import by.paranoidandroid.cityweather.ForecastList
 import by.paranoidandroid.cityweather.R
+import by.paranoidandroid.cityweather.Utils
 import by.paranoidandroid.cityweather.Utils.LOG_TAG
-import by.paranoidandroid.cityweather.domain.entity.Coord
-import by.paranoidandroid.cityweather.domain.entity.Forecast
-import by.paranoidandroid.cityweather.domain.entity.Main
 import by.paranoidandroid.cityweather.view.LoadingView
 import by.paranoidandroid.cityweather.view.adapter.CityAdapter
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModel
@@ -23,29 +22,46 @@ import kotlinx.android.synthetic.main.fragment_cities.*
 import kotlinx.android.synthetic.main.fragment_cities.view.*
 import javax.inject.Inject
 
+
 class CitiesFragment: Fragment(), LoadingView {
     @Inject
     lateinit var viewModelFactory: CitiesViewModelFactory
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_cities, container, false)
+    lateinit var viewModel: CitiesViewModel
+    var cityAdapter: CityAdapter? = null
 
-        val cityAdapter = CityAdapter(context)
-        view.recyclerViewCities.adapter = cityAdapter
-        view.recyclerViewCities.layoutManager = LinearLayoutManager(context)
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         AndroidApplication.injector.inject(this)
-        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(CitiesViewModel::class.java)
-        viewModel.getForecasts()?.observe(this, object : Observer<List<Forecast<Main, Coord>>> {
-            override fun onChanged(cityList: List<Forecast<Main, Coord>>?) {
-                Log.d(LOG_TAG, "onChanged in CitiesFragment")
-                if (cityList != null) {
-                    Log.d(LOG_TAG, "onChanged and cityList != null")
-                    cityAdapter.updateItems(cityList)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(CitiesViewModel::class.java)
+        cityAdapter = CityAdapter(context)
+
+        viewModel.forecasts.observe(this, Observer<ForecastList?> { cityList ->
+            Log.d(LOG_TAG, "forecasts: onChanged in CitiesFragment")
+            if (cityList != null) {
+                Log.d(LOG_TAG, "forecasts: onChanged and cityList != null")
+                cityList.forEach {
+                    Log.d(LOG_TAG, "forecasts: *** ${it.name} and ${Utils.formatDegrees(it.main?.temp)}")
                 }
+
+                cityAdapter?.let { Log.d(LOG_TAG, "forecasts: cityAdapter != null") }
+                cityAdapter?.updateItems(cityList)
             }
         })
+        //viewModel.getNewForecasts()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_cities, container, false)
+        view.recyclerViewCities.layoutManager = LinearLayoutManager(context)
+        view.recyclerViewCities.adapter = cityAdapter
+        Log.d(LOG_TAG, "onCreateView")
         return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
     }
 
     override fun onStartLoading() {
