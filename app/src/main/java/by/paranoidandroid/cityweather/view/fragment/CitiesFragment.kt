@@ -4,11 +4,14 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.ContentLoadingProgressBar
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import by.paranoidandroid.cityweather.AndroidApplication
 import by.paranoidandroid.cityweather.ForecastList
 import by.paranoidandroid.cityweather.R
@@ -17,8 +20,6 @@ import by.paranoidandroid.cityweather.view.LoadingView
 import by.paranoidandroid.cityweather.view.adapter.CityAdapter
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModel
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModelFactory
-import kotlinx.android.synthetic.main.fragment_cities.*
-import kotlinx.android.synthetic.main.fragment_cities.view.*
 import javax.inject.Inject
 
 
@@ -28,6 +29,9 @@ class CitiesFragment: Fragment(), LoadingView {
 
     lateinit var viewModel: CitiesViewModel
     private var cityAdapter: CityAdapter? = null
+    private var recyclerViewCities: RecyclerView? = null
+    private var progressBar: ContentLoadingProgressBar? = null
+    private var tvError: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +48,9 @@ class CitiesFragment: Fragment(), LoadingView {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_cities, container, false)
-        view.recyclerViewCities.layoutManager = LinearLayoutManager(context)
-        view.recyclerViewCities.adapter = cityAdapter
+        recyclerViewCities = view.findViewById(R.id.recycler_view_cities)
+        recyclerViewCities?.layoutManager = LinearLayoutManager(context)
+        recyclerViewCities?.adapter = cityAdapter
         return view
     }
 
@@ -56,26 +61,26 @@ class CitiesFragment: Fragment(), LoadingView {
 
     override fun onStartLoading() {
         Log.d(LOG_TAG, "onStartLoading")
-        progressBar.show()
-        progressBar.visibility = View.VISIBLE
+        progressBar?.show()
+        progressBar?.visibility = View.VISIBLE
     }
 
     override fun onStopLoading() {
         Log.d(LOG_TAG, "onStopLoading")
-        progressBar.post { progressBar.hide() }
-        progressBar.post { progressBar.visibility = View.GONE }
+        progressBar?.post { progressBar?.hide() }
+        progressBar?.post { progressBar?.visibility = View.GONE }
     }
 
     override fun onLoadingError(errorMsg: String) {
         Log.d(LOG_TAG, "onLoadingError")
-        tvError.post {
-            tvError.text = errorMsg
-            tvError.visibility = View.VISIBLE
+        tvError?.post {
+            tvError?.text = errorMsg
+            tvError?.visibility = View.VISIBLE
         }
     }
 
     override fun onLoadingSuccess() {
         Log.d(LOG_TAG, "onLoadingSuccess")
-        tvError.post { tvError.visibility = View.GONE }
+        tvError?.post { tvError?.visibility = View.GONE }
     }
 }

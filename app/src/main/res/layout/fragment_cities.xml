@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <android.support.v4.widget.ContentLoadingProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -18,7 +18,7 @@
         android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewCities"
+        android:id="@+id/recycler_view_cities"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
@@ -30,7 +30,7 @@
         tools:listitem="@layout/city_item" />
 
     <TextView
-        android:id="@+id/tvError"
+        android:id="@+id/tv_error"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="@color/red"
