@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import by.paranoidandroid.cityweather.AndroidApplication
 import by.paranoidandroid.cityweather.ForecastList
 import by.paranoidandroid.cityweather.R
-import by.paranoidandroid.cityweather.Utils
 import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.view.LoadingView
 import by.paranoidandroid.cityweather.view.adapter.CityAdapter
@@ -36,26 +35,17 @@ class CitiesFragment: Fragment(), LoadingView {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CitiesViewModel::class.java)
         cityAdapter = CityAdapter(context)
 
-        viewModel.forecasts.observe(this, Observer<ForecastList?> { cityList ->
-            Log.d(LOG_TAG, "forecasts: onChanged in CitiesFragment")
+        viewModel.getForecasts().observe(this, Observer<ForecastList?> { cityList ->
             if (cityList != null) {
-                Log.d(LOG_TAG, "forecasts: onChanged and cityList != null")
-                cityList.forEach {
-                    Log.d(LOG_TAG, "forecasts: *** ${it.name} and ${Utils.formatDegrees(it.main?.temp)}")
-                }
-
-                cityAdapter?.let { Log.d(LOG_TAG, "forecasts: cityAdapter != null") }
                 cityAdapter?.updateItems(cityList)
             }
         })
-        //viewModel.getNewForecasts()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_cities, container, false)
         view.recyclerViewCities.layoutManager = LinearLayoutManager(context)
         view.recyclerViewCities.adapter = cityAdapter
-        Log.d(LOG_TAG, "onCreateView")
         return view
     }
 
