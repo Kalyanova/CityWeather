@@ -6,10 +6,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import by.paranoidandroid.cityweather.R
-import by.paranoidandroid.cityweather.Utils.ARGS_ACTIVE_FRAGMENT
-import by.paranoidandroid.cityweather.Utils.TAG_TAB_CITIES
-import by.paranoidandroid.cityweather.Utils.TAG_TAB_MAP
-import by.paranoidandroid.cityweather.Utils.TAG_TAB_SETTINGS
 import by.paranoidandroid.cityweather.view.fragment.CitiesFragment
 import by.paranoidandroid.cityweather.view.fragment.MapFragment
 import by.paranoidandroid.cityweather.view.fragment.SettingsFragment
@@ -82,11 +78,18 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    fun resetActiveFragment(newActiveFragment: Fragment) {
+    private fun resetActiveFragment(newActiveFragment: Fragment) {
         fm.beginTransaction()
                 .hide(activeFragment)
                 .show(newActiveFragment)
                 .commit()
         activeFragment = newActiveFragment
+    }
+
+    companion object {
+        const val TAG_TAB_CITIES = "TAG_TAB_CITIES"
+        const val TAG_TAB_MAP = "TAG_TAB_MAP"
+        const val TAG_TAB_SETTINGS = "TAG_TAB_SETTINGS"
+        const val ARGS_ACTIVE_FRAGMENT = "ARGS_ACTIVE_FRAGMENT"
     }
 }
