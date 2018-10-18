@@ -7,9 +7,9 @@ import by.paranoidandroid.cityweather.domain.entity.Main
 typealias ForecastList =  List<Forecast<Main, Coord>>
 
 object Utils {
-    const val TAG_1_TAB = "TAG_2_TAB"
-    const val TAG_2_TAB = "TAG_2_TAB"
-    const val TAG_3_TAB = "TAG_3_TAB"
+    const val TAG_TAB_CITIES = "TAG_TAB_CITIES"
+    const val TAG_TAB_MAP = "TAG_TAB_MAP"
+    const val TAG_TAB_SETTINGS = "TAG_TAB_SETTINGS"
     const val ARGS_ACTIVE_FRAGMENT = "ARGS_ACTIVE_FRAGMENT"
 
     const val LOG_TAG = "CityWeatherApp"

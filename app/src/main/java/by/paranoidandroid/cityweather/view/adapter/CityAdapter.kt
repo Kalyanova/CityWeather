@@ -13,7 +13,7 @@ import by.paranoidandroid.cityweather.domain.entity.Coord
 import by.paranoidandroid.cityweather.domain.entity.Forecast
 import by.paranoidandroid.cityweather.domain.entity.Main
 import by.paranoidandroid.cityweather.view.activity.MainActivity
-import by.paranoidandroid.cityweather.Utils.TAG_1_TAB
+import by.paranoidandroid.cityweather.Utils.TAG_TAB_CITIES
 import by.paranoidandroid.cityweather.view.fragment.CityFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -37,7 +37,7 @@ class CityAdapter(private val context: Context?,
             val fm = activity?.supportFragmentManager
             val cityFragment = CityFragment.newInstance(city.id)
             fm?.beginTransaction()
-                    ?.replace(R.id.main_container, cityFragment, TAG_1_TAB)
+                    ?.replace(R.id.main_container, cityFragment, TAG_TAB_CITIES)
                     ?.addToBackStack(null)
                     ?.commitAllowingStateLoss()
         }
