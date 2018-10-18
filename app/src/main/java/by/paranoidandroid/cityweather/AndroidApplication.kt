@@ -6,11 +6,7 @@ import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.db.parseCities
 import by.paranoidandroid.cityweather.db.room.entity.RoomForecast
 import by.paranoidandroid.cityweather.domain.repository.CityRepository
-import by.paranoidandroid.cityweather.injection.AppComponent
-import by.paranoidandroid.cityweather.injection.AppModule
-import by.paranoidandroid.cityweather.injection.DaggerAppComponent
-import by.paranoidandroid.cityweather.injection.RoomModule
-import by.paranoidandroid.cityweather.network.Api
+import by.paranoidandroid.cityweather.injection.*
 import javax.inject.Inject
 
 class AndroidApplication : Application() {
@@ -53,9 +49,9 @@ class AndroidApplication : Application() {
 
     private fun buildComponent(): AppComponent {
         return DaggerAppComponent.builder()
-                .api(Api)
                 .appModule(AppModule(this))
                 .roomModule(RoomModule(this))
+                .retrofitModule(RetrofitModule())
                 .build()
     }
 
