@@ -27,7 +27,7 @@ class CitiesFragment: Fragment(), LoadingView {
     lateinit var viewModelFactory: CitiesViewModelFactory
 
     lateinit var viewModel: CitiesViewModel
-    var cityAdapter: CityAdapter? = null
+    private var cityAdapter: CityAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

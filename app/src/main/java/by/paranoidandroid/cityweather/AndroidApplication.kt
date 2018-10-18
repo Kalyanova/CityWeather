@@ -4,26 +4,25 @@ import android.app.Application
 import android.util.Log
 import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.db.parseCities
-import by.paranoidandroid.cityweather.db.room.AppDatabase
 import by.paranoidandroid.cityweather.db.room.entity.RoomForecast
+import by.paranoidandroid.cityweather.domain.repository.CityRepository
 import by.paranoidandroid.cityweather.injection.AppComponent
 import by.paranoidandroid.cityweather.injection.AppModule
 import by.paranoidandroid.cityweather.injection.DaggerAppComponent
 import by.paranoidandroid.cityweather.injection.RoomModule
 import by.paranoidandroid.cityweather.network.Api
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.launch
+import javax.inject.Inject
 
 class AndroidApplication : Application() {
-    var database: AppDatabase? = null
+    @Inject
+    lateinit var cityRepository: CityRepository
 
     override fun onCreate() {
         super.onCreate()
         instance = this
-        database = AppDatabase.getAppDatabase(this)
-        checkFirstLaunch()
         injector = buildComponent()
+        injector.inject(this)
+        checkFirstLaunchAndFillDB()
     }
 
     /**
@@ -33,17 +32,14 @@ class AndroidApplication : Application() {
     private fun writeDB() {
         Log.d(LOG_TAG, "writeDB")
         val cities: Array<RoomForecast> = parseCities(this)
-        // TODO: Remove coroutines
-        CoroutineScope(Dispatchers.IO).launch {
-            database?.cityDao()?.insertAll(*cities)
-        }
+        cityRepository.writeDataToDB(cities)
     }
 
     /**
      * Checks whether this is the first launch, and if it's true,
      * parses json file from assets and write data to database.
      */
-    private fun checkFirstLaunch() {
+    private fun checkFirstLaunchAndFillDB() {
         val prefs = this.getSharedPreferences(PREFS_FILENAME, 0)
         val firstLaunch = prefs.getBoolean(FIRST_LAUNCH, true)
         if (firstLaunch) {
@@ -55,7 +51,7 @@ class AndroidApplication : Application() {
         }
     }
 
-    protected fun buildComponent(): AppComponent {
+    private fun buildComponent(): AppComponent {
         return DaggerAppComponent.builder()
                 .api(Api)
                 .appModule(AppModule(this))

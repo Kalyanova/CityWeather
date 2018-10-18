@@ -10,7 +10,6 @@ import by.paranoidandroid.cityweather.Utils.ARGS_ACTIVE_FRAGMENT
 import by.paranoidandroid.cityweather.Utils.TAG_1_TAB
 import by.paranoidandroid.cityweather.Utils.TAG_2_TAB
 import by.paranoidandroid.cityweather.Utils.TAG_3_TAB
-import by.paranoidandroid.cityweather.db.room.AppDatabase
 import by.paranoidandroid.cityweather.view.fragment.CitiesFragment
 import by.paranoidandroid.cityweather.view.fragment.MapFragment
 import by.paranoidandroid.cityweather.view.fragment.SettingsFragment
@@ -48,7 +47,6 @@ class MainActivity : AppCompatActivity() {
                     .commit()
         } else {
             activeFragment = when (savedInstanceState.getString(ARGS_ACTIVE_FRAGMENT)) {
-                TAG_1_TAB -> CitiesFragment()
                 TAG_2_TAB -> MapFragment()
                 TAG_3_TAB -> SettingsFragment()
                 else -> CitiesFragment()
@@ -82,15 +80,6 @@ class MainActivity : AppCompatActivity() {
             is SettingsFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_3_TAB)
         }
         super.onSaveInstanceState(outState)
-    }
-
-    /**
-     * We have only one Activity, thus destroying this Activity imply destroying the app.
-     * TODO: ask whether there is a better solution.
-     */
-    override fun onDestroy() {
-        AppDatabase.destroyDatabase()
-        super.onDestroy()
     }
 
     fun resetActiveFragment(newActiveFragment: Fragment) {

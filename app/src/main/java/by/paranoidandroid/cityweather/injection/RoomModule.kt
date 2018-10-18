@@ -1,6 +1,7 @@
 package by.paranoidandroid.cityweather.injection
 
-import by.paranoidandroid.cityweather.AndroidApplication
+import android.arch.persistence.room.Room
+import android.content.Context
 import by.paranoidandroid.cityweather.db.room.AppDatabase
 import by.paranoidandroid.cityweather.db.room.dao.CityDao
 import dagger.Module
@@ -8,17 +9,19 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class RoomModule(application: AndroidApplication) {
-    private val database: AppDatabase
-
-    init {
-        // TODO: null-safety check
-        database = application.database!!
-    }
+class RoomModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun provideCityDao(): CityDao {
+    fun provideAppDatabase() = Room.databaseBuilder(context,
+                                                    AppDatabase::class.java,
+                                                    AppDatabase.DATABASE_NAME)
+                                    .build()
+
+
+    @Provides
+    @Singleton
+    fun provideCityDao(database: AppDatabase): CityDao {
         return database.cityDao()
     }
 }

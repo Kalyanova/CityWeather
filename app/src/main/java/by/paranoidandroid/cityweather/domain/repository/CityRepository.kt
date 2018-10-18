@@ -60,12 +60,11 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
 
     /**
      * @param ids: identifiers of cities
-     * @param oldValues is here to update LiveData only if result isn't null.
      */
     @Suppress(UNCHECKED_CAST)
-    fun getForecastsFromNetwork(ids: String, oldValues: ForecastList?): MutableLiveData<ForecastList> {
+    fun getForecastsFromNetwork(ids: String): MutableLiveData<ForecastList> {
         Log.d(LOG_TAG, "getForecastsFromNetwork")
-        val data = MutableLiveData<ForecastList>()
+        var data = MutableLiveData<ForecastList>()
 
         val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connManager.activeNetworkInfo
@@ -86,37 +85,16 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
                                     // TODO: not update url - create another Room table with static data for city
                                     RoomForecast(item.id, item.name, coord, main, item.url)
                                 })
-
-                                // Updating database in background
-                                // TODO: is it necessary to do all rx flows disposable to dispose it?
-                                dbDisposable = Completable
-                                        .fromAction {
-                                            Log.d(LOG_TAG, "DB updating...")
-                                            dbRepository.update(*roomForecasts)
-                                        }
-                                        .subscribeOn(Schedulers.io())
-                                        .subscribeWith(object : DisposableCompletableObserver() {
-                                            public override fun onStart() {
-                                                Log.d(LOG_TAG, "DB update started")
-                                            }
-
-                                            override fun onError(ex: Throwable) {
-                                                Log.e(LOG_TAG, "DB update error!", ex)
-                                            }
-
-                                            override fun onComplete() {
-                                                Log.d(LOG_TAG, "DB update done!")
-                                            }
-                                        })
+                                writeDataToDB(roomForecasts)
                             },
                             { throwable ->
                                 Log.e(LOG_TAG, "Network error: ${throwable}")
-                                data.postValue(oldValues)
+                                data = getForecastsFromDB()
                             }
                     )
         } else {
             Log.e(LOG_TAG, "No connection available")
-            data.postValue(oldValues)
+            data = getForecastsFromDB()
         }
         return data
     }
@@ -143,5 +121,31 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
     fun dispose() {
         disposable?.dispose()
         dbDisposable?.dispose()
+    }
+
+    /**
+     * Updating database in background
+     */
+    fun writeDataToDB(roomForecasts: Array<RoomForecast>) {
+        // TODO: is it necessary to do all rx flows disposable to dispose it?
+        dbDisposable = Completable
+                .fromAction {
+                    Log.d(LOG_TAG, "DB updating...")
+                    dbRepository.update(*roomForecasts)
+                }
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(object : DisposableCompletableObserver() {
+                    public override fun onStart() {
+                        Log.d(LOG_TAG, "DB update started")
+                    }
+
+                    override fun onError(ex: Throwable) {
+                        Log.e(LOG_TAG, "DB update error!", ex)
+                    }
+
+                    override fun onComplete() {
+                        Log.d(LOG_TAG, "DB update done!")
+                    }
+                })
     }
 }

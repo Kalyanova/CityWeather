@@ -10,24 +10,7 @@ import by.paranoidandroid.cityweather.db.room.entity.RoomForecast
 @Database(entities = [RoomForecast::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
-        private const val DATABASE_NAME = "cities.db"
-        var INSTANCE: AppDatabase? = null
-
-        fun getAppDatabase(context: Context): AppDatabase? {
-            if (INSTANCE == null){
-                synchronized(AppDatabase::class){
-                    INSTANCE = Room.databaseBuilder(context.applicationContext,
-                                                    AppDatabase::class.java,
-                                                    DATABASE_NAME)
-                                    .build()
-                }
-            }
-            return INSTANCE
-        }
-
-        fun destroyDatabase(){
-            INSTANCE = null
-        }
+        const val DATABASE_NAME = "cities.db"
     }
 
     abstract fun cityDao(): CityDao
