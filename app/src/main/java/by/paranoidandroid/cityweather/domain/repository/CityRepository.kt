@@ -24,7 +24,9 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
-class CityRepository @Inject constructor(val webService: WebRepository, val dbRepository: DBRepository, val context: Context) {
+class CityRepository @Inject constructor(val webService: WebRepository,
+                                         val dbRepository: DBRepository,
+                                         val context: Context) {
     var disposable: Disposable? = null
     var dbDisposable: Disposable? = null
 
@@ -50,7 +52,7 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
                                                 data.postValue(dbforecast as Forecast<Main, Coord>)
                                             },
                                             { dbthrowable ->
-                                                Log.e(LOG_TAG, "Database error: ${dbthrowable}")
+                                                Log.e(LOG_TAG, "DB error: ${dbthrowable}")
 
                                             })
                         }
@@ -66,7 +68,8 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
         Log.d(LOG_TAG, "getForecastsFromNetwork")
         var data = MutableLiveData<ForecastList>()
 
-        val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE)
+                as ConnectivityManager
         val networkInfo = connManager.activeNetworkInfo
         if (networkInfo != null && networkInfo.isConnected) {
             disposable = webService.getForecasts(ids)
@@ -81,8 +84,11 @@ class CityRepository @Inject constructor(val webService: WebRepository, val dbRe
                                 val roomForecasts = Array(result.size, init = { index ->
                                     val item = result[index]
                                     val coord = RoomCoord(item.coord?.lon, item.coord?.lat)
-                                    val main = RoomMain(item.main?.temp, item.main?.minTemp, item.main?.maxTemp)
-                                    // TODO: not update url - create another Room table with static data for city
+                                    val main = RoomMain(item.main?.temp,
+                                                        item.main?.minTemp,
+                                                        item.main?.maxTemp)
+                                    // TODO: don't update url
+                                    // TODO: create another Room table with static data for city
                                     RoomForecast(item.id, item.name, coord, main, item.url)
                                 })
                                 writeDataToDB(roomForecasts)

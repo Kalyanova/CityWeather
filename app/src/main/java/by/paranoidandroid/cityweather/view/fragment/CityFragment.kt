@@ -51,7 +51,9 @@ class CityFragment: Fragment() {
                 ?.observe(this, Observer<Forecast<Main, Coord>> { updateUI() })
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         val view =  inflater.inflate(R.layout.fragment_city, container, false)
         tvCityName = view.findViewById(R.id.tv_city_name) as TextView
         tvWeather = view.findViewById(R.id.tv_weather) as TextView

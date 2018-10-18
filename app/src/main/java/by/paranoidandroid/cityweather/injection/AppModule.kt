@@ -13,7 +13,9 @@ class AppModule(val context: Context) {
 
     @Provides
     @Singleton
-    fun provideCityRepository(webService: WebRepository, dbRepository: DBRepository): CityRepository {
+    fun provideCityRepository(webService: WebRepository, dbRepository: DBRepository):
+            CityRepository {
+
         return CityRepository(webService, dbRepository, context)
     }
 }

@@ -22,7 +22,6 @@ import by.paranoidandroid.cityweather.viewmodel.CitiesViewModel
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModelFactory
 import javax.inject.Inject
 
-
 class CitiesFragment: Fragment(), LoadingView {
     @Inject
     lateinit var viewModelFactory: CitiesViewModelFactory
@@ -36,7 +35,8 @@ class CitiesFragment: Fragment(), LoadingView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidApplication.injector.inject(this)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(CitiesViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+                                      .get(CitiesViewModel::class.java)
         cityAdapter = CityAdapter(context)
 
         viewModel.getForecasts().observe(this, Observer<ForecastList?> { cityList ->
@@ -46,7 +46,9 @@ class CitiesFragment: Fragment(), LoadingView {
         })
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_cities, container, false)
         recyclerViewCities = view.findViewById(R.id.recycler_view_cities)
         recyclerViewCities?.layoutManager = LinearLayoutManager(context)

@@ -8,17 +8,18 @@ import by.paranoidandroid.cityweather.db.room.entity.RoomForecast
 import com.google.gson.Gson
 
 fun parseFile(ctx: Context, filename: String): String {
+    var result = ""
     try {
         val inputStream = ctx.assets.open(filename)
         val size = inputStream.available()
         val buffer = ByteArray(size)
         inputStream.read(buffer)
         inputStream.close()
-        return String(buffer)
+        result = String(buffer)
     } catch (e: Exception) {
         Log.e(LOG_TAG, "Exception: ", e)
-        return ""
     }
+    return result
 }
 
 fun parseCities(ctx: Context): Array<RoomForecast> {
