@@ -2,6 +2,7 @@ package by.paranoidandroid.cityweather.view.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.transition.Fade
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import by.paranoidandroid.cityweather.formatDegrees
 import by.paranoidandroid.cityweather.view.activity.MainActivity
 import by.paranoidandroid.cityweather.view.activity.MainActivity.Companion.TAG_TAB_CITIES
 import by.paranoidandroid.cityweather.view.fragment.CityFragment
+import by.paranoidandroid.cityweather.view.transition.ImageTransition
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
@@ -36,7 +38,13 @@ class CityAdapter(private val context: Context?,
             val activity = context as? MainActivity
             val fm = activity?.supportFragmentManager
             val cityFragment = CityFragment.newInstance(city.id)
+            cityFragment.sharedElementEnterTransition = ImageTransition()
+            cityFragment.sharedElementReturnTransition = ImageTransition()
+            cityFragment.enterTransition = Fade()
+            cityFragment.returnTransition = Fade()
+
             fm?.beginTransaction()
+                    ?.addSharedElement(holder.ivFlag as View, context?.getString(R.string.image_transition))
                     ?.replace(R.id.main_container, cityFragment, TAG_TAB_CITIES)
                     ?.addToBackStack(null)
                     ?.commitAllowingStateLoss()
