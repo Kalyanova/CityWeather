@@ -14,14 +14,15 @@ import by.paranoidandroid.cityweather.domain.entity.Coord
 import by.paranoidandroid.cityweather.domain.entity.Forecast
 import by.paranoidandroid.cityweather.domain.entity.Main
 import by.paranoidandroid.cityweather.formatDegrees
+import by.paranoidandroid.cityweather.view.bindView
 import by.paranoidandroid.cityweather.viewmodel.CityViewModel
 import by.paranoidandroid.cityweather.viewmodel.CityViewModelFactory
 import javax.inject.Inject
 
 class CityFragment : Fragment() {
+    private val tvCityName: TextView by bindView(R.id.tv_city_name)
+    private val tvWeather: TextView by bindView(R.id.tv_weather)
     private var viewModel: CityViewModel? = null
-    private var tvCityName: TextView? = null
-    private var tvWeather: TextView? = null
 
     @Inject
     lateinit var viewModelFactory: CityViewModelFactory
@@ -53,15 +54,13 @@ class CityFragment : Fragment() {
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_city, container, false)
-        tvCityName = view.findViewById(R.id.tv_city_name) as TextView
-        tvWeather = view.findViewById(R.id.tv_weather) as TextView
         updateUI()
         return view
     }
 
     private fun updateUI() {
-        tvCityName?.text = viewModel?.getForecast()?.value?.name
-        tvWeather?.text = viewModel?.getForecast()?.value?.main?.temp?.formatDegrees()
+        tvCityName.text = viewModel?.getForecast()?.value?.name
+        tvWeather.text = viewModel?.getForecast()?.value?.main?.temp?.formatDegrees()
     }
 
     override fun onPause() {

@@ -17,19 +17,22 @@ import by.paranoidandroid.cityweather.R
 import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.view.LoadingView
 import by.paranoidandroid.cityweather.view.adapter.CityAdapter
+import by.paranoidandroid.cityweather.view.bindView
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModel
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModelFactory
 import javax.inject.Inject
 
 class CitiesFragment: Fragment(), LoadingView {
+    private val recyclerViewCities: RecyclerView by bindView(R.id.recycler_view_cities)
+    private val progressBar: ContentLoadingProgressBar by bindView(R.id.progress_bar)
+    private val tvError: TextView by bindView(R.id.tv_error)
+
     @Inject
     lateinit var viewModelFactory: CitiesViewModelFactory
 
     lateinit var viewModel: CitiesViewModel
     private var cityAdapter: CityAdapter? = null
-    private var recyclerViewCities: RecyclerView? = null
-    private var progressBar: ContentLoadingProgressBar? = null
-    private var tvError: TextView? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +52,7 @@ class CitiesFragment: Fragment(), LoadingView {
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_cities, container, false)
-        recyclerViewCities = view.findViewById(R.id.recycler_view_cities)
-        recyclerViewCities?.adapter = cityAdapter
+        recyclerViewCities.adapter = cityAdapter
         return view
     }
 
@@ -61,26 +63,26 @@ class CitiesFragment: Fragment(), LoadingView {
 
     override fun onStartLoading() {
         Log.d(LOG_TAG, "onStartLoading")
-        progressBar?.show()
-        progressBar?.visibility = View.VISIBLE
+        progressBar.show()
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun onStopLoading() {
         Log.d(LOG_TAG, "onStopLoading")
-        progressBar?.post { progressBar?.hide() }
-        progressBar?.post { progressBar?.visibility = View.GONE }
+        progressBar.post { progressBar.hide() }
+        progressBar.post { progressBar.visibility = View.GONE }
     }
 
     override fun onLoadingError(errorMsg: String) {
         Log.d(LOG_TAG, "onLoadingError")
-        tvError?.post {
-            tvError?.text = errorMsg
-            tvError?.visibility = View.VISIBLE
+        tvError.post {
+            tvError.text = errorMsg
+            tvError.visibility = View.VISIBLE
         }
     }
 
     override fun onLoadingSuccess() {
         Log.d(LOG_TAG, "onLoadingSuccess")
-        tvError?.post { tvError?.visibility = View.GONE }
+        tvError.post { tvError.visibility = View.GONE }
     }
 }

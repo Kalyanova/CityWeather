@@ -6,20 +6,19 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import by.paranoidandroid.cityweather.R
+import by.paranoidandroid.cityweather.view.bindView
 import by.paranoidandroid.cityweather.view.fragment.CitiesFragment
 import by.paranoidandroid.cityweather.view.fragment.MapFragment
 import by.paranoidandroid.cityweather.view.fragment.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
-    val fm: FragmentManager = supportFragmentManager
-    var bottomNavView: BottomNavigationView? = null
-    var activeFragment: Fragment? = null
+    private val bottomNavView: BottomNavigationView by bindView(R.id.bottom_nav_view)
+    private val fm: FragmentManager = supportFragmentManager
+    private var activeFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        bottomNavView = findViewById(R.id.bottom_nav_view)
 
         val cityFragment = CitiesFragment()
         val mapFragment = MapFragment()
@@ -49,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        bottomNavView?.setOnNavigationItemSelectedListener { item ->
+        bottomNavView.setOnNavigationItemSelectedListener { item ->
                 when (item.itemId) {
                     R.id.action_cities -> {
                         resetActiveFragment(cityFragment)
