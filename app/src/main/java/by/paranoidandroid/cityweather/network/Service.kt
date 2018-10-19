@@ -1,6 +1,6 @@
 package by.paranoidandroid.cityweather.network
 
-import by.paranoidandroid.cityweather.injection.RetrofitModule.Companion.APP_ID
+import by.paranoidandroid.cityweather.injection.NetworkModule.Companion.APP_ID
 import by.paranoidandroid.cityweather.network.entity.WebCityList
 import by.paranoidandroid.cityweather.network.entity.WebForecast
 import io.reactivex.Single
