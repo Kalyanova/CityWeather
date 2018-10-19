@@ -2,38 +2,23 @@ package by.paranoidandroid.cityweather
 
 import android.app.Application
 import android.util.Log
-import by.paranoidandroid.cityweather.Utils.TAG
+import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.db.parseCities
-import by.paranoidandroid.cityweather.db.room.AppDatabase
 import by.paranoidandroid.cityweather.db.room.entity.RoomForecast
-import by.paranoidandroid.cityweather.injection.AppComponent
-import by.paranoidandroid.cityweather.injection.AppModule
-import by.paranoidandroid.cityweather.injection.DaggerAppComponent
-import by.paranoidandroid.cityweather.injection.RoomModule
-import by.paranoidandroid.cityweather.network.Api
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.launch
-
-const val PREFS_FILENAME = "APP_PREFS"
-const val FIRST_LAUNCH = "FIRST_LAUNCH"
+import by.paranoidandroid.cityweather.domain.repository.CityRepository
+import by.paranoidandroid.cityweather.injection.*
+import javax.inject.Inject
 
 class AndroidApplication : Application() {
-    companion object {
-        lateinit var instance: AndroidApplication
-            private set
-
-        lateinit var injector: AppComponent
-    }
-
-    var database: AppDatabase? = null
+    @Inject
+    lateinit var cityRepository: CityRepository
 
     override fun onCreate() {
         super.onCreate()
         instance = this
-        database = AppDatabase.getAppDatabase(this)
-        checkFirstLaunch()
         injector = buildComponent()
+        injector.inject(this)
+        checkFirstLaunchAndFillDB()
     }
 
     /**
@@ -41,23 +26,20 @@ class AndroidApplication : Application() {
      * and if yes, load data to database from json file.
      */
     private fun writeDB() {
-        Log.d(TAG, "writeDB")
+        Log.d(LOG_TAG, "writeDB")
         val cities: Array<RoomForecast> = parseCities(this)
-        // TODO: Remove coroutines
-        CoroutineScope(Dispatchers.IO).launch {
-            database?.cityDao()?.insertAll(*cities)
-        }
+        cityRepository.writeDataToDB(cities)
     }
 
     /**
      * Checks whether this is the first launch, and if it's true,
      * parses json file from assets and write data to database.
      */
-    private fun checkFirstLaunch() {
+    private fun checkFirstLaunchAndFillDB() {
         val prefs = this.getSharedPreferences(PREFS_FILENAME, 0)
         val firstLaunch = prefs.getBoolean(FIRST_LAUNCH, true)
         if (firstLaunch) {
-            Log.d(TAG, "First launch")
+            Log.d(LOG_TAG, "First launch")
             writeDB()
             prefs.edit()
                     .putBoolean(FIRST_LAUNCH, false)
@@ -65,11 +47,21 @@ class AndroidApplication : Application() {
         }
     }
 
-    protected fun buildComponent(): AppComponent {
+    private fun buildComponent(): AppComponent {
         return DaggerAppComponent.builder()
-                .api(Api)
                 .appModule(AppModule(this))
                 .roomModule(RoomModule(this))
+                .retrofitModule(RetrofitModule())
                 .build()
+    }
+
+    companion object {
+        const val PREFS_FILENAME = "APP_PREFS"
+        const val FIRST_LAUNCH = "FIRST_LAUNCH"
+
+        lateinit var instance: AndroidApplication
+            private set
+
+        lateinit var injector: AppComponent
     }
 }

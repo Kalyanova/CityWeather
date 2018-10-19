@@ -8,12 +8,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import by.paranoidandroid.cityweather.R
-import by.paranoidandroid.cityweather.Utils.formatDegrees
 import by.paranoidandroid.cityweather.domain.entity.Coord
 import by.paranoidandroid.cityweather.domain.entity.Forecast
 import by.paranoidandroid.cityweather.domain.entity.Main
+import by.paranoidandroid.cityweather.formatDegrees
 import by.paranoidandroid.cityweather.view.activity.MainActivity
-import by.paranoidandroid.cityweather.view.activity.TAG_1
+import by.paranoidandroid.cityweather.view.activity.MainActivity.Companion.TAG_TAB_CITIES
 import by.paranoidandroid.cityweather.view.fragment.CityFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -37,7 +37,7 @@ class CityAdapter(private val context: Context?,
             val fm = activity?.supportFragmentManager
             val cityFragment = CityFragment.newInstance(city.id)
             fm?.beginTransaction()
-                    ?.replace(R.id.main_container, cityFragment, TAG_1)
+                    ?.replace(R.id.main_container, cityFragment, TAG_TAB_CITIES)
                     ?.addToBackStack(null)
                     ?.commitAllowingStateLoss()
         }
@@ -49,7 +49,7 @@ class CityAdapter(private val context: Context?,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.tvCityName.text = cities[position].name
         holder.tvDistance.text = "${cities[position].coord?.lat}, ${cities[position].coord?.lon}"
-        holder.tvTemperature.text = formatDegrees(cities[position].main?.temp)
+        holder.tvTemperature.text = cities[position].main?.temp?.formatDegrees()
 
         val requestOptions = RequestOptions()
                 .placeholder(R.drawable.city_placeholder)

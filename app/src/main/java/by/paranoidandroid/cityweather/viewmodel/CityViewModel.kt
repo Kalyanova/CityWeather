@@ -9,7 +9,9 @@ import by.paranoidandroid.cityweather.domain.entity.Main
 import by.paranoidandroid.cityweather.domain.repository.CityRepository
 import javax.inject.Inject
 
-class CityViewModel @Inject constructor(val cityRepository: CityRepository) : ViewModel() {
+class CityViewModel @Inject constructor(private val cityRepository: CityRepository) :
+        ViewModel() {
+
     private var forecast: LiveData<Forecast<Main, Coord>> ? = null
 
     fun init(id: Int) {
@@ -26,7 +28,8 @@ class CityViewModel @Inject constructor(val cityRepository: CityRepository) : Vi
     }
 }
 
-class CityViewModelFactory @Inject constructor(val cityRepository: CityRepository) : ViewModelProvider.NewInstanceFactory() {
+class CityViewModelFactory @Inject constructor(val cityRepository: CityRepository) :
+        ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return  CityViewModel(cityRepository) as T

@@ -1,14 +1,16 @@
 package by.paranoidandroid.cityweather.injection
 
-import by.paranoidandroid.cityweather.network.Api
+import by.paranoidandroid.cityweather.AndroidApplication
 import by.paranoidandroid.cityweather.view.fragment.CitiesFragment
 import by.paranoidandroid.cityweather.view.fragment.CityFragment
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [Api::class, AppModule::class, RoomModule::class])
+@Component(modules = [AppModule::class, RoomModule::class, RetrofitModule::class])
 interface AppComponent {
+
+    fun inject(application: AndroidApplication)
 
     fun inject(cityFragment: CityFragment)
 

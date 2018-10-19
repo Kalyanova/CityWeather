@@ -6,18 +6,11 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import by.paranoidandroid.cityweather.R
-import by.paranoidandroid.cityweather.db.room.AppDatabase
 import by.paranoidandroid.cityweather.view.fragment.CitiesFragment
 import by.paranoidandroid.cityweather.view.fragment.MapFragment
 import by.paranoidandroid.cityweather.view.fragment.SettingsFragment
 
-const val TAG_1 = "TAG_1"
-const val TAG_2 = "TAG_2"
-const val TAG_3 = "TAG_3"
-const val ARGS_ACTIVE_FRAGMENT = "ARGS_ACTIVE_FRAGMENT"
-
 class MainActivity : AppCompatActivity() {
-
     val fm: FragmentManager = supportFragmentManager
     var bottomNavView: BottomNavigationView? = null
     var activeFragment: Fragment? = null
@@ -36,23 +29,22 @@ class MainActivity : AppCompatActivity() {
             activeFragment = cityFragment
 
             fm.beginTransaction()
-                    .add(R.id.main_container, cityFragment, TAG_1)
+                    .add(R.id.main_container, cityFragment, TAG_TAB_CITIES)
                     .commit()
 
             fm.beginTransaction()
-                    .add(R.id.main_container, mapFragment, TAG_2)
+                    .add(R.id.main_container, mapFragment, TAG_TAB_MAP)
                     .hide(mapFragment)
                     .commit()
 
             fm.beginTransaction()
-                    .add(R.id.main_container, settingsFragment, TAG_3)
+                    .add(R.id.main_container, settingsFragment, TAG_TAB_SETTINGS)
                     .hide(settingsFragment)
                     .commit()
         } else {
             activeFragment = when (savedInstanceState.getString(ARGS_ACTIVE_FRAGMENT)) {
-                TAG_1 -> CitiesFragment()
-                TAG_2 -> MapFragment()
-                TAG_3 -> SettingsFragment()
+                TAG_TAB_MAP -> MapFragment()
+                TAG_TAB_SETTINGS -> SettingsFragment()
                 else -> CitiesFragment()
             }
         }
@@ -79,27 +71,25 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         when (activeFragment) {
-            is CitiesFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_1)
-            is MapFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_2)
-            is SettingsFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_3)
+            is CitiesFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_TAB_CITIES)
+            is MapFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_TAB_MAP)
+            is SettingsFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_TAB_SETTINGS)
         }
         super.onSaveInstanceState(outState)
     }
 
-    /**
-     * We have only one Activity, thus destroying this Activity imply destroying the app.
-     * TODO: ask whether there is a better solution.
-     */
-    override fun onDestroy() {
-        AppDatabase.destroyDatabase()
-        super.onDestroy()
-    }
-
-    fun resetActiveFragment(newActiveFragment: Fragment) {
+    private fun resetActiveFragment(newActiveFragment: Fragment) {
         fm.beginTransaction()
                 .hide(activeFragment)
                 .show(newActiveFragment)
                 .commit()
         activeFragment = newActiveFragment
+    }
+
+    companion object {
+        const val TAG_TAB_CITIES = "TAG_TAB_CITIES"
+        const val TAG_TAB_MAP = "TAG_TAB_MAP"
+        const val TAG_TAB_SETTINGS = "TAG_TAB_SETTINGS"
+        const val ARGS_ACTIVE_FRAGMENT = "ARGS_ACTIVE_FRAGMENT"
     }
 }
