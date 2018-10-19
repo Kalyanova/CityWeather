@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.ContentLoadingProgressBar
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -51,7 +50,6 @@ class CitiesFragment: Fragment(), LoadingView {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_cities, container, false)
         recyclerViewCities = view.findViewById(R.id.recycler_view_cities)
-        recyclerViewCities?.layoutManager = LinearLayoutManager(context)
         recyclerViewCities?.adapter = cityAdapter
         return view
     }

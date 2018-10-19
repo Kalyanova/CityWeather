@@ -51,7 +51,7 @@ class AndroidApplication : Application() {
         return DaggerAppComponent.builder()
                 .appModule(AppModule(this))
                 .roomModule(RoomModule(this))
-                .retrofitModule(NetworkModule())
+                .networkModule(NetworkModule())
                 .build()
     }
 

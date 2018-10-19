@@ -8,7 +8,6 @@ typealias ForecastList =  List<Forecast<Main, Coord>>
 
 object Utils {
     const val LOG_TAG = "CityWeatherApp"
-    const val UNCHECKED_CAST = "UNCHECKED_CAST"
     const val DEGREE_END = " °C"
     const val DOUBLE_FORMAT = "%.2f"
     const val DEGREE_DIFF = 273.15

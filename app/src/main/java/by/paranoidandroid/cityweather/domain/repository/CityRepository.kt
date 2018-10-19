@@ -7,7 +7,6 @@ import android.net.ConnectivityManager
 import android.util.Log
 import by.paranoidandroid.cityweather.ForecastList
 import by.paranoidandroid.cityweather.Utils.LOG_TAG
-import by.paranoidandroid.cityweather.Utils.UNCHECKED_CAST
 import by.paranoidandroid.cityweather.db.room.entity.RoomCoord
 import by.paranoidandroid.cityweather.db.room.entity.RoomForecast
 import by.paranoidandroid.cityweather.db.room.entity.RoomMain
@@ -30,7 +29,7 @@ class CityRepository @Inject constructor(val webService: WebRepository,
     var disposable: Disposable? = null
     var dbDisposable: Disposable? = null
 
-    @Suppress(UNCHECKED_CAST)
+    @Suppress("UNCHECKED_CAST")
     fun getForecast(id: Int): LiveData<Forecast<Main, Coord>> {
         val data = MutableLiveData<Forecast<Main, Coord>>()
         disposable = webService.getCityForecast(id)
@@ -63,7 +62,7 @@ class CityRepository @Inject constructor(val webService: WebRepository,
     /**
      * @param ids: identifiers of cities
      */
-    @Suppress(UNCHECKED_CAST)
+    @Suppress("UNCHECKED_CAST")
     fun getForecastsFromNetwork(ids: String): MutableLiveData<ForecastList> {
         Log.d(LOG_TAG, "getForecastsFromNetwork")
         var data = MutableLiveData<ForecastList>()
@@ -105,7 +104,7 @@ class CityRepository @Inject constructor(val webService: WebRepository,
         return data
     }
 
-    @Suppress(UNCHECKED_CAST)
+    @Suppress("UNCHECKED_CAST")
     fun getForecastsFromDB(): MutableLiveData<ForecastList> {
         Log.d(LOG_TAG, "getForecastsFromDB")
         val data = MutableLiveData<ForecastList>()
