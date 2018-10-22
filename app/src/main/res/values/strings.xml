@@ -10,5 +10,5 @@
     <string name="test_temperature">4 °C</string>
 
     <string name="image_transition">image_transition</string>
-
+    <string name="image_transition_2">image_transition 2</string>
 </resources>

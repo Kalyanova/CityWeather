@@ -12,18 +12,19 @@
         android:transitionName="@string/image_transition"
         android:layout_width="48dp"
         android:layout_height="40dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:contentDescription="@string/content_descr_city_image"
         android:paddingRight="@dimen/padding"
         android:paddingEnd="@dimen/padding"
+        android:src="@drawable/city_placeholder"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_location_on" />
+        tools:src="@drawable/city_placeholder" />
 
     <TextView
         android:id="@+id/tv_city_name"
+        android:transitionName="@string/image_transition_2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="@color/colorAccent"

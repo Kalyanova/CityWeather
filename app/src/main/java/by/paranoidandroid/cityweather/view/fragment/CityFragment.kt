@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,10 +19,15 @@ import by.paranoidandroid.cityweather.view.bindView
 import by.paranoidandroid.cityweather.viewmodel.CityViewModel
 import by.paranoidandroid.cityweather.viewmodel.CityViewModelFactory
 import javax.inject.Inject
+import android.view.ViewTreeObserver
+import android.widget.ImageView
+import by.paranoidandroid.cityweather.Utils.LOG_TAG
+
 
 class CityFragment : Fragment() {
     private val tvCityName: TextView by bindView(R.id.tv_city_name)
     private val tvWeather: TextView by bindView(R.id.tv_weather)
+    private val cityImage: ImageView by bindView(R.id.iv_city_image)
     private var viewModel: CityViewModel? = null
 
     @Inject
@@ -45,9 +51,9 @@ class CityFragment : Fragment() {
         AndroidApplication.injector.inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                                       .get(CityViewModel::class.java)
-        id?.let { viewModel?.init(id) }
-        viewModel?.getForecast()
-                ?.observe(this, Observer<Forecast<Main, Coord>> { updateUI() })
+        //id?.let { viewModel?.init(id) }
+        /*viewModel?.getForecast()
+                ?.observe(this, Observer<Forecast<Main, Coord>> { updateUI() })*/
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -62,8 +68,19 @@ class CityFragment : Fragment() {
     }
 
     private fun updateUI() {
-        tvCityName.text = viewModel?.getForecast()?.value?.name
-        tvWeather.text = viewModel?.getForecast()?.value?.main?.temp?.formatDegrees()
+        /*cityImage.viewTreeObserver.addOnPreDrawListener(
+                object : ViewTreeObserver.OnPreDrawListener {
+                    override fun onPreDraw(): Boolean {
+                        Log.d(LOG_TAG, "onPreDraw")
+                        cityImage.viewTreeObserver.removeOnPreDrawListener(this)
+                        startPostponedEnterTransition()
+                        return true
+                    }
+                })*/
+        /*tvCityName.text = viewModel?.getForecast()?.value?.name
+        tvWeather.text = viewModel?.getForecast()?.value?.main?.temp?.formatDegrees()*/
+        tvCityName.text = "City name"
+        tvWeather.text = "Weather"
     }
 
     override fun onPause() {

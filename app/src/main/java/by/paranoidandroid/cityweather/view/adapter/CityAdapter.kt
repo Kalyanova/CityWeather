@@ -2,7 +2,6 @@ package by.paranoidandroid.cityweather.view.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.transition.Fade
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,14 +12,11 @@ import by.paranoidandroid.cityweather.domain.entity.Coord
 import by.paranoidandroid.cityweather.domain.entity.Forecast
 import by.paranoidandroid.cityweather.domain.entity.Main
 import by.paranoidandroid.cityweather.formatDegrees
-import by.paranoidandroid.cityweather.view.activity.MainActivity
-import by.paranoidandroid.cityweather.view.activity.MainActivity.Companion.TAG_TAB_CITIES
-import by.paranoidandroid.cityweather.view.fragment.CityFragment
-import by.paranoidandroid.cityweather.view.transition.ImageTransition
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
 class CityAdapter(private val context: Context?,
+                  private val clickListener: OnItemClickListener,
                   private var cities: ArrayList<Forecast<Main, Coord>> = ArrayList()
 ) : RecyclerView.Adapter<CityAdapter.ViewHolder>() {
 
@@ -31,23 +27,12 @@ class CityAdapter(private val context: Context?,
                 .from(context)
                 .inflate(R.layout.city_item, parent, false))
 
-        // TODO: take out ClickListener separately
         holder.itemView.setOnClickListener {
             val position = holder.adapterPosition
             val city = cities[position]
-            val activity = context as? MainActivity
-            val fm = activity?.supportFragmentManager
-            val cityFragment = CityFragment.newInstance(city.id)
-            cityFragment.sharedElementEnterTransition = ImageTransition()
-            cityFragment.sharedElementReturnTransition = ImageTransition()
-            cityFragment.enterTransition = Fade()
-            cityFragment.returnTransition = Fade()
-
-            fm?.beginTransaction()
-                    ?.addSharedElement(holder.ivFlag as View, context?.getString(R.string.image_transition))
-                    ?.replace(R.id.main_container, cityFragment, TAG_TAB_CITIES)
-                    ?.addToBackStack(null)
-                    ?.commitAllowingStateLoss()
+            val view = holder.ivFlag
+            val textView = holder.tvCityName
+            clickListener.onClick(position, city, view, textView)
         }
 
         return holder
@@ -62,11 +47,11 @@ class CityAdapter(private val context: Context?,
         val requestOptions = RequestOptions()
                 .placeholder(R.drawable.city_placeholder)
                 .error(R.drawable.city_placeholder)
-        if (context != null) {
+        /*if (context != null) {
             Glide.with(context).setDefaultRequestOptions(requestOptions)
                     .load(cities[position].url)
                     .into(holder.ivFlag)
-        }
+        }*/
     }
 
     fun updateItems(data: List<Forecast<Main, Coord>>) {
@@ -80,5 +65,9 @@ class CityAdapter(private val context: Context?,
         var tvCityName: TextView = view.findViewById(R.id.tv_city_name)
         var tvDistance: TextView = view.findViewById(R.id.tv_distance)
         var tvTemperature: TextView = view.findViewById(R.id.tv_temperature)
+    }
+
+    interface OnItemClickListener {
+        fun onClick(position: Int, city: Forecast<Main, Coord>, vararg view: View)
     }
 }
