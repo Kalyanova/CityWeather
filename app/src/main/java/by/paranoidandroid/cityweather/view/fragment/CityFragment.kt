@@ -53,9 +53,12 @@ class CityFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_city, container, false)
+        return inflater.inflate(R.layout.fragment_city, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         updateUI()
-        return view
     }
 
     private fun updateUI() {

@@ -51,14 +51,12 @@ class CitiesFragment: Fragment(), LoadingView {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_cities, container, false)
-        recyclerViewCities.adapter = cityAdapter
-        return view
+        return inflater.inflate(R.layout.fragment_cities, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recyclerViewCities.adapter = cityAdapter
     }
 
     override fun onStartLoading() {
