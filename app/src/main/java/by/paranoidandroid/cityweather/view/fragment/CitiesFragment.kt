@@ -31,14 +31,13 @@ import by.paranoidandroid.cityweather.viewmodel.CitiesViewModelFactory
 import javax.inject.Inject
 
 class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
-    private val recyclerViewCities: RecyclerView by bindView(R.id.recycler_view_cities)
     private val progressBar: ContentLoadingProgressBar by bindView(R.id.progress_bar)
     private val tvError: TextView by bindView(R.id.tv_error)
 
     @Inject
     lateinit var viewModelFactory: CitiesViewModelFactory
 
-    lateinit var viewModel: CitiesViewModel
+    private lateinit var viewModel: CitiesViewModel
     private var cityAdapter: CityAdapter? = null
 
 
@@ -64,6 +63,7 @@ class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val recyclerViewCities = view.findViewById<RecyclerView>(R.id.recycler_view_cities)
         recyclerViewCities.adapter = cityAdapter
     }
 
