@@ -30,9 +30,9 @@ class CityAdapter(private val context: Context?,
         holder.itemView.setOnClickListener {
             val position = holder.adapterPosition
             val city = cities[position]
-            val view = holder.ivFlag
-            val textView = holder.tvCityName
-            clickListener.onClick(position, city, view, textView)
+            val imageView = holder.ivFlag
+            imageView.transitionName = context?.getString(R.string.image_transition)
+            clickListener.onClick(position, city, imageView)
         }
 
         return holder
@@ -47,11 +47,11 @@ class CityAdapter(private val context: Context?,
         val requestOptions = RequestOptions()
                 .placeholder(R.drawable.city_placeholder)
                 .error(R.drawable.city_placeholder)
-        /*if (context != null) {
+        if (context != null) {
             Glide.with(context).setDefaultRequestOptions(requestOptions)
                     .load(cities[position].url)
                     .into(holder.ivFlag)
-        }*/
+        }
     }
 
     fun updateItems(data: List<Forecast<Main, Coord>>) {
@@ -68,6 +68,6 @@ class CityAdapter(private val context: Context?,
     }
 
     interface OnItemClickListener {
-        fun onClick(position: Int, city: Forecast<Main, Coord>, vararg view: View)
+        fun onClick(position: Int, city: Forecast<Main, Coord>, animationTarget: ImageView)
     }
 }

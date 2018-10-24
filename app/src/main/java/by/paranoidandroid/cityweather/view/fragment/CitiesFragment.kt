@@ -4,9 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.transition.Fade
-import android.support.transition.TransitionInflater
 import android.support.v4.app.Fragment
-import android.support.v4.view.ViewCompat
 import android.support.v4.widget.ContentLoadingProgressBar
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -30,7 +28,6 @@ import by.paranoidandroid.cityweather.view.bindView
 import by.paranoidandroid.cityweather.view.transition.ImageTransition
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModel
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModelFactory
-import kotlinx.android.synthetic.main.city_item.*
 import javax.inject.Inject
 
 class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
@@ -70,24 +67,19 @@ class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
         recyclerViewCities.adapter = cityAdapter
     }
 
-    override fun onClick(position: Int,  city: Forecast<Main, Coord>, vararg view: View) {
+    override fun onClick(position: Int,  city: Forecast<Main, Coord>, animationTarget: ImageView) {
         val activity = context as? MainActivity
         val fm = activity?.supportFragmentManager
         val cityFragment = CityFragment.newInstance(city.id)
 
         //cityFragment.postponeEnterTransition()
-        //postponeEnterTransition()
-
-        val imageTransition = TransitionInflater.from(context).inflateTransition(R.transition.animation)
-
-        cityFragment.sharedElementEnterTransition =  imageTransition //ImageTransition()
-        cityFragment.sharedElementReturnTransition = imageTransition //ImageTransition()
-        /*cityFragment.enterTransition = Fade()
-        cityFragment.returnTransition = Fade()*/
+        cityFragment.sharedElementEnterTransition = ImageTransition()
+        cityFragment.sharedElementReturnTransition = ImageTransition()
+        cityFragment.enterTransition = Fade()
+        cityFragment.returnTransition = Fade()
 
         fm?.beginTransaction()
-                ?.addSharedElement(view[0], ViewCompat.getTransitionName(view[0]))//context?.getString(R.string.image_transition))
-                ?.addSharedElement(view[1], ViewCompat.getTransitionName(view[1]))
+                ?.addSharedElement(animationTarget, animationTarget.transitionName)
                 ?.replace(R.id.main_container, cityFragment, TAG_TAB_CITIES)
                 ?.addToBackStack(null)
                 ?.commitAllowingStateLoss()

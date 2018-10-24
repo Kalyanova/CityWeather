@@ -51,9 +51,9 @@ class CityFragment : Fragment() {
         AndroidApplication.injector.inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                                       .get(CityViewModel::class.java)
-        //id?.let { viewModel?.init(id) }
-        /*viewModel?.getForecast()
-                ?.observe(this, Observer<Forecast<Main, Coord>> { updateUI() })*/
+        id?.let { viewModel?.init(id) }
+        viewModel?.getForecast()
+                ?.observe(this, Observer<Forecast<Main, Coord>> { updateUI() })
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -77,10 +77,8 @@ class CityFragment : Fragment() {
                         return true
                     }
                 })*/
-        /*tvCityName.text = viewModel?.getForecast()?.value?.name
-        tvWeather.text = viewModel?.getForecast()?.value?.main?.temp?.formatDegrees()*/
-        tvCityName.text = "City name"
-        tvWeather.text = "Weather"
+        tvCityName.text = viewModel?.getForecast()?.value?.name
+        tvWeather.text = viewModel?.getForecast()?.value?.main?.temp?.formatDegrees()
     }
 
     override fun onPause() {
