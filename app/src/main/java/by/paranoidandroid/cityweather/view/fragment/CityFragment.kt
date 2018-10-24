@@ -85,9 +85,13 @@ class CityFragment : Fragment() {
                 .placeholder(R.drawable.city_placeholder)
                 .error(R.drawable.city_placeholder)
         if (activity != null) {
+            Log.d(LOG_TAG, "activity != null")
+            Log.d(LOG_TAG, "url ${viewModel?.getForecast()?.value?.url}")
             Glide.with(requireActivity()).setDefaultRequestOptions(requestOptions)
                     .load(viewModel?.getForecast()?.value?.url)
                     .into(cityImage)
+        } else {
+            Log.d(LOG_TAG, "activity == null")
         }
     }
 
