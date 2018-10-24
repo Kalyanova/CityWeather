@@ -16,7 +16,8 @@ class CitiesViewModel @Inject constructor(private val cityRepository: CityReposi
 
     private fun getNewForecasts(forecastsList: ForecastList): MutableLiveData<ForecastList> {
         val ids: IntArray = forecastsList.map { it.id }.toIntArray()
-        return cityRepository.getForecastsFromNetwork(ids.joinToString(separator = ","))
+        return cityRepository.getForecastsFromNetwork(ids.joinToString(separator = ","),
+                                                      forecastsList)
     }
 }
 

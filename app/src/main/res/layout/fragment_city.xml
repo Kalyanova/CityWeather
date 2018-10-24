@@ -25,7 +25,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/city_placeholder"
                     android:contentDescription="@string/content_descr_city_image" />
 
                 <LinearLayout

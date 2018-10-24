@@ -22,6 +22,8 @@ import javax.inject.Inject
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import by.paranoidandroid.cityweather.Utils.LOG_TAG
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 
 
 class CityFragment : Fragment() {
@@ -79,6 +81,14 @@ class CityFragment : Fragment() {
                 })*/
         tvCityName.text = viewModel?.getForecast()?.value?.name
         tvWeather.text = viewModel?.getForecast()?.value?.main?.temp?.formatDegrees()
+        val requestOptions = RequestOptions()
+                .placeholder(R.drawable.city_placeholder)
+                .error(R.drawable.city_placeholder)
+        if (activity != null) {
+            Glide.with(requireActivity()).setDefaultRequestOptions(requestOptions)
+                    .load(viewModel?.getForecast()?.value?.url)
+                    .into(cityImage)
+        }
     }
 
     override fun onPause() {

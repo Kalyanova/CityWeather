@@ -63,7 +63,7 @@ class CityRepository @Inject constructor(val webService: WebRepository,
      * @param ids: identifiers of cities
      */
     @Suppress("UNCHECKED_CAST")
-    fun getForecastsFromNetwork(ids: String): MutableLiveData<ForecastList> {
+    fun getForecastsFromNetwork(ids: String, oldData: ForecastList): MutableLiveData<ForecastList> {
         Log.d(LOG_TAG, "getForecastsFromNetwork")
         var data = MutableLiveData<ForecastList>()
 
@@ -78,6 +78,12 @@ class CityRepository @Inject constructor(val webService: WebRepository,
                             { forecastList ->
                                 Log.d(LOG_TAG, "Success")
                                 val result = forecastList.list.asList() as ForecastList
+
+                                result.forEach {
+                                    it.url =
+                                        oldData.firstOrNull { item -> item.id == it.id }?.url
+                                }
+
                                 data.postValue(result)
 
                                 val roomForecasts = Array(result.size, init = { index ->
@@ -90,7 +96,7 @@ class CityRepository @Inject constructor(val webService: WebRepository,
                                     // TODO: create another Room table with static data for city
                                     RoomForecast(item.id, item.name, coord, main, item.url)
                                 })
-                                writeDataToDB(roomForecasts)
+                                writeDataToDB(roomForecasts, false)
                             },
                             { throwable ->
                                 Log.e(LOG_TAG, "Network error: ${throwable}")
@@ -131,12 +137,22 @@ class CityRepository @Inject constructor(val webService: WebRepository,
     /**
      * Updating database in background
      */
-    fun writeDataToDB(roomForecasts: Array<RoomForecast>) {
-        // TODO: is it necessary to do all rx flows disposable to dispose it?
+    fun writeDataToDB(roomForecasts: Array<RoomForecast>, withUrls: Boolean = true) {
+        // TODO: it's necessary to do all rx flows disposable and to dispose it
         dbDisposable = Completable
                 .fromAction {
-                    Log.d(LOG_TAG, "DB updating...")
-                    dbRepository.update(*roomForecasts)
+                    Log.d(LOG_TAG,
+                            "DB updating... ${if (withUrls) "with urls" else "without urls"}")
+                    if (withUrls) {
+                        dbRepository.update(*roomForecasts)
+                        roomForecasts.forEach {
+                            Log.d(LOG_TAG, "writing url ${it.url}")
+                        }
+                    } else {
+                        roomForecasts.forEach {
+                            dbRepository.update(it)
+                        }
+                    }
                 }
                 .subscribeOn(Schedulers.io())
                 .subscribeWith(object : DisposableCompletableObserver() {
