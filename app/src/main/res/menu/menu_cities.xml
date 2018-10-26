@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/action_add_city"
+        android:icon="@drawable/ic_add_circle"
+        android:title="@string/action_add_city"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_show_error"
+        android:icon="@drawable/ic_error"
+        android:title="@string/action_show_error"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+</menu>

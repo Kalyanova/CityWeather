@@ -146,9 +146,6 @@ class CityRepository @Inject constructor(val webService: WebRepository,
                             "DB updating... ${if (withUrls) "with urls" else "without urls"}")
                     if (withUrls) {
                         dbRepository.update(*roomForecasts)
-                        roomForecasts.forEach {
-                            Log.d(LOG_TAG, "writing url ${it.url}")
-                        }
                     } else {
                         roomForecasts.forEach {
                             dbRepository.update(it)

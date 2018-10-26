@@ -1,4 +1,4 @@
-package by.paranoidandroid.cityweather.view.fragment
+package by.paranoidandroid.cityweather.view.fragment.city
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.TextView
 import by.paranoidandroid.cityweather.AndroidApplication
 import by.paranoidandroid.cityweather.R
@@ -19,10 +20,10 @@ import by.paranoidandroid.cityweather.view.bindView
 import by.paranoidandroid.cityweather.viewmodel.CityViewModel
 import by.paranoidandroid.cityweather.viewmodel.CityViewModelFactory
 import javax.inject.Inject
-import android.view.ViewTreeObserver
 import android.widget.ImageView
 import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 
 
@@ -73,7 +74,7 @@ class CityFragment : Fragment() {
     }
 
     private fun updateUI() {
-        /*cityImage.viewTreeObserver.addOnPreDrawListener(
+        cityImage.viewTreeObserver.addOnPreDrawListener(
                 object : ViewTreeObserver.OnPreDrawListener {
                     override fun onPreDraw(): Boolean {
                         Log.d(LOG_TAG, "onPreDraw")
@@ -81,7 +82,7 @@ class CityFragment : Fragment() {
                         startPostponedEnterTransition()
                         return true
                     }
-                })*/
+                })
         tvCityName.text = viewModel?.getForecast()?.value?.name
         tvWeather.text = viewModel?.getForecast()?.value?.main?.temp?.formatDegrees()
         val requestOptions = RequestOptions()

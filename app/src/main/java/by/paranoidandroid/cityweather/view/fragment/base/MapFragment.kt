@@ -1,4 +1,4 @@
-package by.paranoidandroid.cityweather.view.fragment
+package by.paranoidandroid.cityweather.view.fragment.base
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

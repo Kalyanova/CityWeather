@@ -7,9 +7,9 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import by.paranoidandroid.cityweather.R
 import by.paranoidandroid.cityweather.view.bindView
-import by.paranoidandroid.cityweather.view.fragment.CitiesFragment
-import by.paranoidandroid.cityweather.view.fragment.MapFragment
-import by.paranoidandroid.cityweather.view.fragment.SettingsFragment
+import by.paranoidandroid.cityweather.view.fragment.base.CitiesFragment
+import by.paranoidandroid.cityweather.view.fragment.base.MapFragment
+import by.paranoidandroid.cityweather.view.fragment.base.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
     private val bottomNavView: BottomNavigationView by bindView(R.id.bottom_nav_view)

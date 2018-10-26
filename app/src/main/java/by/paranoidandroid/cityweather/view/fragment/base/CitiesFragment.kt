@@ -1,4 +1,4 @@
-package by.paranoidandroid.cityweather.view.fragment
+package by.paranoidandroid.cityweather.view.fragment.base
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -8,11 +8,10 @@ import android.support.v4.app.Fragment
 import android.support.v4.widget.ContentLoadingProgressBar
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import by.paranoidandroid.cityweather.AndroidApplication
 import by.paranoidandroid.cityweather.ForecastList
 import by.paranoidandroid.cityweather.R
@@ -25,6 +24,7 @@ import by.paranoidandroid.cityweather.view.activity.MainActivity
 import by.paranoidandroid.cityweather.view.activity.MainActivity.Companion.TAG_TAB_CITIES
 import by.paranoidandroid.cityweather.view.adapter.CityAdapter
 import by.paranoidandroid.cityweather.view.bindView
+import by.paranoidandroid.cityweather.view.fragment.city.CityFragment
 import by.paranoidandroid.cityweather.view.transition.ImageTransition
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModel
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModelFactory
@@ -43,6 +43,7 @@ class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         AndroidApplication.injector.inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                                       .get(CitiesViewModel::class.java)
@@ -67,12 +68,27 @@ class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
         recyclerViewCities.adapter = cityAdapter
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.menu_cities, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_add_city ->
+                Toast.makeText(context, "Adding city", Toast.LENGTH_SHORT).show()
+            R.id.action_show_error ->
+                Toast.makeText(context, "Show error", Toast.LENGTH_SHORT).show()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onClick(position: Int,  city: Forecast<Main, Coord>, animationTarget: ImageView) {
         val activity = context as? MainActivity
         val fm = activity?.supportFragmentManager
         val cityFragment = CityFragment.newInstance(city.id, city.url)
 
-        //cityFragment.postponeEnterTransition()
+        cityFragment.postponeEnterTransition()
         cityFragment.sharedElementEnterTransition = ImageTransition()
         cityFragment.sharedElementReturnTransition = ImageTransition()
         cityFragment.enterTransition = Fade()
