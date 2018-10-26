@@ -24,7 +24,9 @@
                     android:transitionName="@string/image_transition"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:scaleType="centerCrop"
+                    android:scaleType="matrix"
+                    android:adjustViewBounds="true"
+                    android:layout_gravity="center"
                     android:contentDescription="@string/content_descr_city_image" />
 
                 <LinearLayout

@@ -48,6 +48,7 @@ class CityAdapter(private val context: Context?,
         Log.d(LOG_TAG, "url: ${cities[position].url}")
 
         val requestOptions = RequestOptions()
+                .circleCrop()
                 .placeholder(R.drawable.city_placeholder)
                 .error(R.drawable.city_placeholder)
         if (context != null) {

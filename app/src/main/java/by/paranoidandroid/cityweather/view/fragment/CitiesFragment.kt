@@ -70,7 +70,7 @@ class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
     override fun onClick(position: Int,  city: Forecast<Main, Coord>, animationTarget: ImageView) {
         val activity = context as? MainActivity
         val fm = activity?.supportFragmentManager
-        val cityFragment = CityFragment.newInstance(city.id)
+        val cityFragment = CityFragment.newInstance(city.id, city.url)
 
         //cityFragment.postponeEnterTransition()
         cityFragment.sharedElementEnterTransition = ImageTransition()

@@ -37,10 +37,12 @@ class CityFragment : Fragment() {
 
     companion object {
         private val UID_KEY = "uid"
+        private val URL_KEY = "url"
 
-        fun newInstance(id: Int): CityFragment {
+        fun newInstance(id: Int, url: String?): CityFragment {
             val args = Bundle()
             args.putSerializable(UID_KEY, id)
+            args.putSerializable(URL_KEY, url)
             val fragment = CityFragment()
             fragment.arguments = args
             return fragment
@@ -50,10 +52,11 @@ class CityFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val id = arguments?.getInt(UID_KEY)
+        val url = arguments?.getString(URL_KEY)
         AndroidApplication.injector.inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                                       .get(CityViewModel::class.java)
-        id?.let { viewModel?.init(id) }
+        id?.let { viewModel?.init(id, url) }
         viewModel?.getForecast()
                 ?.observe(this, Observer<Forecast<Main, Coord>> { updateUI() })
     }

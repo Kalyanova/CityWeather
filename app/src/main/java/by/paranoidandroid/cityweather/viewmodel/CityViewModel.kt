@@ -14,11 +14,11 @@ class CityViewModel @Inject constructor(private val cityRepository: CityReposito
 
     private var forecast: LiveData<Forecast<Main, Coord>> ? = null
 
-    fun init(id: Int) {
+    fun init(id: Int, url: String?) {
         if (this.forecast != null) {
             return
         }
-        forecast = cityRepository.getForecast(id)
+        forecast = cityRepository.getForecast(id, url)
     }
 
     fun getForecast() = forecast

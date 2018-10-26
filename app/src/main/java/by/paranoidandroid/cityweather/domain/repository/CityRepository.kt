@@ -30,7 +30,7 @@ class CityRepository @Inject constructor(val webService: WebRepository,
     var dbDisposable: Disposable? = null
 
     @Suppress("UNCHECKED_CAST")
-    fun getForecast(id: Int): LiveData<Forecast<Main, Coord>> {
+    fun getForecast(id: Int, url: String?): LiveData<Forecast<Main, Coord>> {
         val data = MutableLiveData<Forecast<Main, Coord>>()
         disposable = webService.getCityForecast(id)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -38,6 +38,7 @@ class CityRepository @Inject constructor(val webService: WebRepository,
                 .subscribe(
                         { forecast ->
                             Log.d(LOG_TAG, "onSuccess ${forecast.name}")
+                            forecast.url = url
                             data.postValue(forecast as Forecast<Main, Coord>)
                         },
                         { throwable ->
