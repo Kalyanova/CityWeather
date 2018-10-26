@@ -45,7 +45,6 @@ class CityAdapter(private val context: Context?,
         holder.tvCityName.text = cities[position].name
         holder.tvDistance.text = "${cities[position].coord?.lat}, ${cities[position].coord?.lon}"
         holder.tvTemperature.text = cities[position].main?.temp?.formatDegrees()
-        Log.d(LOG_TAG, "url: ${cities[position].url}")
 
         val requestOptions = RequestOptions()
                 .circleCrop()

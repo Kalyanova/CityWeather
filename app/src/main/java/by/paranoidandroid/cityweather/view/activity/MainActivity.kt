@@ -5,7 +5,9 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import by.paranoidandroid.cityweather.R
+import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.view.bindView
 import by.paranoidandroid.cityweather.view.fragment.base.CitiesFragment
 import by.paranoidandroid.cityweather.view.fragment.base.MapFragment
@@ -49,23 +51,25 @@ class MainActivity : AppCompatActivity() {
         }
 
         bottomNavView.setOnNavigationItemSelectedListener { item ->
-                when (item.itemId) {
-                    R.id.action_cities -> {
-                        resetActiveFragment(cityFragment)
-                    }
-                    R.id.action_map -> {
-                        resetActiveFragment(mapFragment)
-                    }
-                    R.id.action_settings -> {
-                        resetActiveFragment(settingsFragment)
-                    }
-                    else -> {
-                        resetActiveFragment(cityFragment)
-                    }
+            when (item.itemId) {
+                R.id.action_cities -> {
+                    resetActiveFragment(cityFragment)
                 }
-                return@setOnNavigationItemSelectedListener true
+                R.id.action_map -> {
+                    resetActiveFragment(mapFragment)
+                }
+                R.id.action_settings -> {
+                    resetActiveFragment(settingsFragment)
+                }
+                else -> {
+                    resetActiveFragment(cityFragment)
+                }
+            }
+            Log.d(LOG_TAG, "active fragment is ${activeFragment.toString()}")
+            return@setOnNavigationItemSelectedListener true
         }
 
+        Log.d(LOG_TAG, "active fragment is ${activeFragment.toString()}")
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

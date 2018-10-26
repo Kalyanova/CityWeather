@@ -75,6 +75,8 @@ class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
+            R.id.action_sync ->
+                Toast.makeText(context, "Sync", Toast.LENGTH_SHORT).show()
             R.id.action_add_city ->
                 Toast.makeText(context, "Adding city", Toast.LENGTH_SHORT).show()
             R.id.action_show_error ->

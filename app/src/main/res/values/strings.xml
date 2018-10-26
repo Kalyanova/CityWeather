@@ -11,6 +11,7 @@
 
     <string name="image_transition">image_transition</string>
 
+    <string name="action_sync">Sync</string>
     <string name="action_add_city">Add city</string>
     <string name="action_show_error">Show error</string>
 </resources>
