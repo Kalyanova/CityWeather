@@ -28,6 +28,7 @@ import javax.inject.Inject
 
 class CityFragment : Fragment() {
     private val tvCityName: TextView by bindView(R.id.tv_city_name)
+    private val tvCityDescription: TextView by bindView(R.id.tv_city_description)
     private val tvWeather: TextView by bindView(R.id.tv_weather)
     private val cityImage: ImageView by bindView(R.id.iv_city_image)
     private var viewModel: CityViewModel? = null
@@ -83,6 +84,7 @@ class CityFragment : Fragment() {
                     }
                 })
         tvCityName.text = viewModel?.getForecast()?.value?.name
+        tvCityDescription.text = viewModel?.getForecast()?.value?.description
         tvWeather.text = viewModel?.getForecast()?.value?.main?.temp?.formatDegrees()
         val requestOptions = RequestOptions()
                 .placeholder(R.drawable.city_placeholder)

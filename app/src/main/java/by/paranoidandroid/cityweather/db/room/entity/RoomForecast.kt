@@ -10,6 +10,7 @@ data class RoomForecast(
         @PrimaryKey(autoGenerate = true)
         override var id: Int,
         override var name: String,
+        override var description: String?,
         @Embedded
         override var coord: RoomCoord?,
         @Embedded
