@@ -16,4 +16,8 @@
     <string name="action_show_error">Show error</string>
 
     <string name="today_forecast">Today\'s Forecast</string>
+
+    <string name="delete">DELETE</string>
+    <string name="undo">Undo</string>
+    <string name="removed_item_notification">City %s is deleted</string>
 </resources>

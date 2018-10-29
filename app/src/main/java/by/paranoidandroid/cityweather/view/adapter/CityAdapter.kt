@@ -1,6 +1,7 @@
 package by.paranoidandroid.cityweather.view.adapter
 
 import android.content.Context
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -67,6 +68,7 @@ class CityAdapter(private val context: Context?,
         var tvCityName: TextView = view.findViewById(R.id.tv_city_name)
         var tvDistance: TextView = view.findViewById(R.id.tv_distance)
         var tvTemperature: TextView = view.findViewById(R.id.tv_temperature)
+        var viewForeground: ConstraintLayout = view.findViewById(R.id.view_foreground)
     }
 
     interface OnItemClickListener {

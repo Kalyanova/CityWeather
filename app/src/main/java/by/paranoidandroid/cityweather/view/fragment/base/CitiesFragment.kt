@@ -1,13 +1,18 @@
 package by.paranoidandroid.cityweather.view.fragment.base
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.transition.Fade
 import android.support.v4.app.Fragment
 import android.support.v4.widget.ContentLoadingProgressBar
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
@@ -21,6 +26,8 @@ import by.paranoidandroid.cityweather.domain.entity.Coord
 import by.paranoidandroid.cityweather.domain.entity.Forecast
 import by.paranoidandroid.cityweather.domain.entity.Main
 import by.paranoidandroid.cityweather.view.LoadingView
+import by.paranoidandroid.cityweather.view.RecyclerItemTouchHelper
+import by.paranoidandroid.cityweather.view.RecyclerItemTouchHelperListener
 import by.paranoidandroid.cityweather.view.activity.MainActivity
 import by.paranoidandroid.cityweather.view.activity.MainActivity.Companion.TAG_TAB_CITIES
 import by.paranoidandroid.cityweather.view.adapter.CityAdapter
@@ -31,7 +38,8 @@ import by.paranoidandroid.cityweather.viewmodel.CitiesViewModel
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModelFactory
 import javax.inject.Inject
 
-class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
+class CitiesFragment: Fragment(),
+        LoadingView, CityAdapter.OnItemClickListener, RecyclerItemTouchHelperListener {
     private val progressBar: ContentLoadingProgressBar by bindView(R.id.progress_bar)
     private val tvError: TextView by bindView(R.id.tv_error)
 
@@ -70,6 +78,13 @@ class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         val recyclerViewCities = view.findViewById<RecyclerView>(R.id.recycler_view_cities)
         recyclerViewCities.adapter = cityAdapter
+
+        recyclerViewCities.itemAnimator = DefaultItemAnimator()
+        recyclerViewCities.addItemDecoration(DividerItemDecoration(context, VERTICAL))
+
+        val itemTouchHelperCallback = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this)
+        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerViewCities)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -105,6 +120,37 @@ class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
                 ?.replace(R.id.main_container, cityFragment, TAG_TAB_CITIES)
                 ?.addToBackStack(TAG_TAB_CITIES)
                 ?.commitAllowingStateLoss()
+    }
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
+        if (viewHolder is CityAdapter.ViewHolder) {
+            //val ctx = activity.getApplicationContext()
+
+            // backup of removed item info for undo purpose
+            val deletedIndex = viewHolder.adapterPosition
+            val cityName = viewHolder.tvCityName.text
+
+            // get the id of removed item in database
+            val id: Int? = null
+            if (id != null) {
+                // remove the item from recycler view
+                //adapter.removeItem(deletedId, ctx)
+            }
+
+            // Showing snack bar with undo option
+            // TODO: change it!
+            val snackBar = Snackbar.make(view!!,
+                            getString(R.string.removed_item_notification, cityName),
+                            Snackbar.LENGTH_LONG)
+            /*
+            snackBar.setAction(R.string.undo, View.OnClickListener {
+                // undo is selected, restore the deleted item
+                adapter.restoreItem(deletedId, name, email, ctx)
+            })
+            */
+            snackBar.setActionTextColor(Color.YELLOW)
+            snackBar.show()
+        }
     }
 
     override fun onStartLoading() {
