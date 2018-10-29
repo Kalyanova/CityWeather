@@ -8,7 +8,7 @@ import javax.inject.Inject
 class CitiesViewModel @Inject constructor(private val cityRepository: CityRepository) :
         ViewModel() {
 
-    private var cities: MutableLiveData<ForecastList> = cityRepository.getForecastsFromDB()
+    var cities: MutableLiveData<ForecastList> = cityRepository.getForecastsFromDB()
 
     fun getForecasts(): LiveData<ForecastList> = Transformations.switchMap(cities) {
         getNewForecasts(it)

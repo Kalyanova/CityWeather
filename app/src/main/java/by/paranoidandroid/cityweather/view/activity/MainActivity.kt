@@ -5,13 +5,12 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import by.paranoidandroid.cityweather.R
-import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.view.bindView
 import by.paranoidandroid.cityweather.view.fragment.base.CitiesFragment
 import by.paranoidandroid.cityweather.view.fragment.base.MapFragment
 import by.paranoidandroid.cityweather.view.fragment.base.SettingsFragment
+import by.paranoidandroid.cityweather.view.fragment.city.CityFragment
 
 class MainActivity : AppCompatActivity() {
     private val bottomNavView: BottomNavigationView by bindView(R.id.bottom_nav_view)
@@ -22,11 +21,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val cityFragment = CitiesFragment()
+        val cityFragment: Fragment
         val mapFragment = MapFragment()
         val settingsFragment = SettingsFragment()
 
         if (savedInstanceState == null) {
+            cityFragment = CitiesFragment()
             activeFragment = cityFragment
 
             fm.beginTransaction()
@@ -43,17 +43,19 @@ class MainActivity : AppCompatActivity() {
                     .hide(settingsFragment)
                     .commit()
         } else {
+            cityFragment = fm.findFragmentByTag(TAG_TAB_CITIES) ?: CitiesFragment()
             activeFragment = when (savedInstanceState.getString(ARGS_ACTIVE_FRAGMENT)) {
                 TAG_TAB_MAP -> MapFragment()
                 TAG_TAB_SETTINGS -> SettingsFragment()
-                else -> CitiesFragment()
+                else -> cityFragment
             }
         }
 
         bottomNavView.setOnNavigationItemSelectedListener { item ->
+            val cityFragmentFromFM = fm.findFragmentByTag(TAG_TAB_CITIES)
             when (item.itemId) {
                 R.id.action_cities -> {
-                    resetActiveFragment(cityFragment)
+                    resetActiveFragment(cityFragmentFromFM)
                 }
                 R.id.action_map -> {
                     resetActiveFragment(mapFragment)
@@ -61,27 +63,34 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_settings -> {
                     resetActiveFragment(settingsFragment)
                 }
-                else -> {
-                    resetActiveFragment(cityFragment)
-                }
             }
-            Log.d(LOG_TAG, "active fragment is ${activeFragment.toString()}")
             return@setOnNavigationItemSelectedListener true
         }
-
-        Log.d(LOG_TAG, "active fragment is ${activeFragment.toString()}")
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         when (activeFragment) {
             is CitiesFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_TAB_CITIES)
+            is CityFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_TAB_CITIES) // ?
             is MapFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_TAB_MAP)
             is SettingsFragment -> outState.putString(ARGS_ACTIVE_FRAGMENT, TAG_TAB_SETTINGS)
         }
         super.onSaveInstanceState(outState)
     }
 
-    private fun resetActiveFragment(newActiveFragment: Fragment) {
+    // TODO: is it okay to make such navigation?
+    override fun onBackPressed() {
+        if (isFirstTab()) {
+            super.onBackPressed()
+        } else {
+            finish()
+        }
+    }
+
+    private fun resetActiveFragment(newActiveFragment: Fragment?) {
+        if (isFirstTab()) {
+            activeFragment = fm.findFragmentByTag(TAG_TAB_CITIES)
+        }
         fm.beginTransaction()
                 .hide(activeFragment)
                 .show(newActiveFragment)
@@ -94,5 +103,9 @@ class MainActivity : AppCompatActivity() {
         const val TAG_TAB_MAP = "TAG_TAB_MAP"
         const val TAG_TAB_SETTINGS = "TAG_TAB_SETTINGS"
         const val ARGS_ACTIVE_FRAGMENT = "ARGS_ACTIVE_FRAGMENT"
+    }
+
+    private fun isFirstTab(): Boolean {
+        return activeFragment is CitiesFragment || activeFragment is CityFragment
     }
 }

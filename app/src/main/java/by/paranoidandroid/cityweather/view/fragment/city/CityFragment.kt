@@ -9,9 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.ImageView
 import android.widget.TextView
 import by.paranoidandroid.cityweather.AndroidApplication
 import by.paranoidandroid.cityweather.R
+import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.domain.entity.Coord
 import by.paranoidandroid.cityweather.domain.entity.Forecast
 import by.paranoidandroid.cityweather.domain.entity.Main
@@ -19,12 +21,9 @@ import by.paranoidandroid.cityweather.formatDegrees
 import by.paranoidandroid.cityweather.view.bindView
 import by.paranoidandroid.cityweather.viewmodel.CityViewModel
 import by.paranoidandroid.cityweather.viewmodel.CityViewModelFactory
-import javax.inject.Inject
-import android.widget.ImageView
-import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import javax.inject.Inject
 
 
 class CityFragment : Fragment() {

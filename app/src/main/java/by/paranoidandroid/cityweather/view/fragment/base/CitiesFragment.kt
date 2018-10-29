@@ -1,5 +1,6 @@
 package by.paranoidandroid.cityweather.view.fragment.base
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -40,7 +41,6 @@ class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
     private lateinit var viewModel: CitiesViewModel
     private var cityAdapter: CityAdapter? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -48,6 +48,10 @@ class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                                       .get(CitiesViewModel::class.java)
         cityAdapter = CityAdapter(context, this)
+
+        viewModel.cities.value?.let {
+            cityAdapter?.updateItems(it)
+        }
 
         viewModel.getForecasts().observe(this, Observer<ForecastList?> { cityList ->
             if (cityList != null) {
@@ -99,7 +103,7 @@ class CitiesFragment: Fragment(), LoadingView, CityAdapter.OnItemClickListener {
         fm?.beginTransaction()
                 ?.addSharedElement(animationTarget, animationTarget.transitionName)
                 ?.replace(R.id.main_container, cityFragment, TAG_TAB_CITIES)
-                ?.addToBackStack(null)
+                ?.addToBackStack(TAG_TAB_CITIES)
                 ?.commitAllowingStateLoss()
     }
 

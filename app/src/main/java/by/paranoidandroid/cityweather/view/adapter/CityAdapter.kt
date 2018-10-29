@@ -2,14 +2,13 @@ package by.paranoidandroid.cityweather.view.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import by.paranoidandroid.cityweather.ForecastList
 import by.paranoidandroid.cityweather.R
-import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.domain.entity.Coord
 import by.paranoidandroid.cityweather.domain.entity.Forecast
 import by.paranoidandroid.cityweather.domain.entity.Main
@@ -57,7 +56,7 @@ class CityAdapter(private val context: Context?,
         }
     }
 
-    fun updateItems(data: List<Forecast<Main, Coord>>) {
+    fun updateItems(data: ForecastList) {
         cities.clear()
         cities.addAll(data)
         notifyDataSetChanged()
