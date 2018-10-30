@@ -32,6 +32,7 @@ class CitiesViewModel @Inject constructor(private val cityRepository: CityReposi
 class CitiesViewModelFactory @Inject constructor(private val cityRepository: CityRepository) :
         ViewModelProvider.NewInstanceFactory() {
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return CitiesViewModel(cityRepository) as T
     }
