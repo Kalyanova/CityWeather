@@ -17,20 +17,20 @@
             android:id="@+id/delete_icon"
             android:layout_width="@dimen/ic_delete"
             android:layout_height="@dimen/ic_delete"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/padding"
+            android:layout_marginEnd="@dimen/padding"
             android:src="@drawable/ic_delete" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/padding"
-            android:layout_toLeftOf="@id/delete_icon"
+            android:layout_marginEnd="@dimen/padding"
+            android:layout_toStartOf="@id/delete_icon"
             android:text="@string/delete"
             android:textColor="@color/white"
-            android:textSize="13dp" />
+            android:textSize="@dimen/little_text_size" />
 
     </RelativeLayout>
 
@@ -47,7 +47,6 @@
             android:layout_height="40dp"
             android:contentDescription="@string/content_descr_city_image"
             android:paddingEnd="@dimen/padding"
-            android:paddingRight="@dimen/padding"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
