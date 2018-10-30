@@ -5,4 +5,9 @@
     <dimen name="ic_delete">30dp</dimen>
 
     <dimen name="grid_layout_height">100dp</dimen>
+
+    <dimen name="middle_text_size">18sp</dimen>
+    <dimen name="large_text_size">20sp</dimen>
+
+    <dimen name="bottom_nav_view_height">60dp</dimen>
 </resources>

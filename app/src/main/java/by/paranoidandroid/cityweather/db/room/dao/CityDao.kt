@@ -27,6 +27,6 @@ interface CityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(forecast: RoomForecast)
 
-    @Delete
-    fun delete(forecast: RoomForecast)
+    @Query("DELETE FROM city WHERE name=:cityName")
+    fun delete(cityName: String)
 }

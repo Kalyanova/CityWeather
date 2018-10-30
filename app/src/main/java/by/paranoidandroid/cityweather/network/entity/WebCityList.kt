@@ -4,8 +4,8 @@ import by.paranoidandroid.cityweather.domain.entity.CityList
 import java.util.*
 
 data class WebCityList(
-        override var cnt: Int,
-        override var list: Array<WebForecast>
+    override var cnt: Int,
+    override var list: Array<WebForecast>
 ) : CityList<WebForecast>() {
 
     override fun equals(other: Any?): Boolean {

@@ -30,18 +30,18 @@ class MainActivity : AppCompatActivity() {
             activeFragment = cityFragment
 
             fm.beginTransaction()
-                    .add(R.id.main_container, cityFragment, TAG_TAB_CITIES)
-                    .commit()
+                .add(R.id.main_container, cityFragment, TAG_TAB_CITIES)
+                .commit()
 
             fm.beginTransaction()
-                    .add(R.id.main_container, mapFragment, TAG_TAB_MAP)
-                    .hide(mapFragment)
-                    .commit()
+                .add(R.id.main_container, mapFragment, TAG_TAB_MAP)
+                .hide(mapFragment)
+                .commit()
 
             fm.beginTransaction()
-                    .add(R.id.main_container, settingsFragment, TAG_TAB_SETTINGS)
-                    .hide(settingsFragment)
-                    .commit()
+                .add(R.id.main_container, settingsFragment, TAG_TAB_SETTINGS)
+                .hide(settingsFragment)
+                .commit()
         } else {
             cityFragment = fm.findFragmentByTag(TAG_TAB_CITIES) ?: CitiesFragment()
             activeFragment = when (savedInstanceState.getString(ARGS_ACTIVE_FRAGMENT)) {
@@ -78,7 +78,6 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    // TODO: is it okay to make such navigation?
     override fun onBackPressed() {
         if (isFirstTab()) {
             super.onBackPressed()
@@ -92,9 +91,9 @@ class MainActivity : AppCompatActivity() {
             activeFragment = fm.findFragmentByTag(TAG_TAB_CITIES)
         }
         fm.beginTransaction()
-                .hide(activeFragment)
-                .show(newActiveFragment)
-                .commit()
+            .hide(activeFragment)
+            .show(newActiveFragment)
+            .commit()
         activeFragment = newActiveFragment
     }
 

@@ -2,7 +2,7 @@ package by.paranoidandroid.cityweather.view.transition
 
 import android.support.transition.*
 
-class ImageTransition: TransitionSet() {
+class ImageTransition : TransitionSet() {
 
     init {
         val fadeIn = Fade()
@@ -20,11 +20,11 @@ class ImageTransition: TransitionSet() {
         val changeImageTransform = ChangeImageTransform()
 
         addTransition(fadeIn)
-                setOrdering(ORDERING_TOGETHER)
-                .addTransition(changeBounds)
-                .addTransition(changeTransform)
-                .addTransition(changeClipBounds)
-                .addTransition(changeImageTransform)
-                .addTransition(fadeOut)
+        setOrdering(ORDERING_TOGETHER)
+            .addTransition(changeBounds)
+            .addTransition(changeTransform)
+            .addTransition(changeClipBounds)
+            .addTransition(changeImageTransform)
+            .addTransition(fadeOut)
     }
 }

@@ -11,19 +11,19 @@ interface Service {
 
     @GET("/data/2.5/weather")
     fun getForecast(
-            @Query("q") city: String,
-            @Query("appid") appId: String = APP_ID
+        @Query("q") city: String,
+        @Query("appid") appId: String = APP_ID
     ): Single<WebForecast>
 
     @GET("/data/2.5/weather")
     fun getForecast(
-            @Query("id") cityId: Int,
-            @Query("appid") appId: String = APP_ID
+        @Query("id") cityId: Int,
+        @Query("appid") appId: String = APP_ID
     ): Single<WebForecast>
 
     @GET("/data/2.5/group")
     fun getForecasts(
-            @Query("id", encoded = true) ids: String,
-            @Query("appid") appId: String = APP_ID
+        @Query("id", encoded = true) ids: String,
+        @Query("appid") appId: String = APP_ID
     ): Single<WebCityList>
 }

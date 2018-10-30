@@ -189,12 +189,18 @@ private fun <T, V : View> optional(id: Int, finder: T.(Int) -> View?): ReadOnlyP
 }
 
 @Suppress("UNCHECKED_CAST")
-private fun <T, V : View> required(ids: IntArray, finder: T.(Int) -> View?): ReadOnlyProperty<T, List<V>> {
+private fun <T, V : View> required(
+    ids: IntArray,
+    finder: T.(Int) -> View?
+): ReadOnlyProperty<T, List<V>> {
     return Lazy { t: T, desc -> ids.map { t.finder(it) as V? ?: viewNotFound(it, desc) } }
 }
 
 @Suppress("UNCHECKED_CAST")
-private fun <T, V : View> optional(ids: IntArray, finder: T.(Int) -> View?): ReadOnlyProperty<T, List<V>> {
+private fun <T, V : View> optional(
+    ids: IntArray,
+    finder: T.(Int) -> View?
+): ReadOnlyProperty<T, List<V>> {
     return Lazy { t: T, _ -> ids.map { t.finder(it) as V? }.filterNotNull() }
 }
 

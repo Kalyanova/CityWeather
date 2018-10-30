@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import by.paranoidandroid.cityweather.AndroidApplication
 import by.paranoidandroid.cityweather.R
-import by.paranoidandroid.cityweather.Utils.LOG_TAG
 import by.paranoidandroid.cityweather.domain.entity.Coord
 import by.paranoidandroid.cityweather.domain.entity.Forecast
 import by.paranoidandroid.cityweather.domain.entity.Main
@@ -39,11 +37,13 @@ class CityFragment : Fragment() {
     companion object {
         private val UID_KEY = "uid"
         private val URL_KEY = "url"
+        private val DESCR_KEY = "descr"
 
-        fun newInstance(id: Int, url: String?): CityFragment {
+        fun newInstance(id: Int, url: String?, cityDescription: String?): CityFragment {
             val args = Bundle()
-            args.putSerializable(UID_KEY, id)
-            args.putSerializable(URL_KEY, url)
+            args.putInt(UID_KEY, id)
+            args.putString(URL_KEY, url)
+            args.putString(DESCR_KEY, cityDescription)
             val fragment = CityFragment()
             fragment.arguments = args
             return fragment
@@ -54,17 +54,20 @@ class CityFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val id = arguments?.getInt(UID_KEY)
         val url = arguments?.getString(URL_KEY)
+        val cityDescription = arguments?.getString(DESCR_KEY)
         AndroidApplication.injector.inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory)
-                                      .get(CityViewModel::class.java)
-        id?.let { viewModel?.init(id, url) }
+            .get(CityViewModel::class.java)
+        id?.let { viewModel?.init(id, url, cityDescription) }
         viewModel?.getForecast()
-                ?.observe(this, Observer<Forecast<Main, Coord>> { updateUI() })
+            ?.observe(this, Observer<Forecast<Main, Coord>> { updateUI() })
     }
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_city, container, false)
     }
 
@@ -75,28 +78,23 @@ class CityFragment : Fragment() {
 
     private fun updateUI() {
         cityImage.viewTreeObserver.addOnPreDrawListener(
-                object : ViewTreeObserver.OnPreDrawListener {
-                    override fun onPreDraw(): Boolean {
-                        Log.d(LOG_TAG, "onPreDraw")
-                        cityImage.viewTreeObserver.removeOnPreDrawListener(this)
-                        startPostponedEnterTransition()
-                        return true
-                    }
-                })
+            object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    cityImage.viewTreeObserver.removeOnPreDrawListener(this)
+                    startPostponedEnterTransition()
+                    return true
+                }
+            })
         tvCityName.text = viewModel?.getForecast()?.value?.name
-        tvCityDescription.text = viewModel?.getForecast()?.value?.description
+        tvCityDescription.text = viewModel?.getForecast()?.value?.cityDescription
         tvWeather.text = viewModel?.getForecast()?.value?.main?.temp?.formatDegrees()
         val requestOptions = RequestOptions()
-                .placeholder(R.drawable.city_placeholder)
-                .error(R.drawable.city_placeholder)
+            .placeholder(R.drawable.city_placeholder)
+            .error(R.drawable.city_placeholder)
         if (activity != null) {
-            Log.d(LOG_TAG, "activity != null")
-            Log.d(LOG_TAG, "url ${viewModel?.getForecast()?.value?.url}")
             Glide.with(requireActivity()).setDefaultRequestOptions(requestOptions)
-                    .load(viewModel?.getForecast()?.value?.url)
-                    .into(cityImage)
-        } else {
-            Log.d(LOG_TAG, "activity == null")
+                .load(viewModel?.getForecast()?.value?.url)
+                .into(cityImage)
         }
     }
 

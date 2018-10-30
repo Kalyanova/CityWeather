@@ -38,8 +38,8 @@ import by.paranoidandroid.cityweather.viewmodel.CitiesViewModel
 import by.paranoidandroid.cityweather.viewmodel.CitiesViewModelFactory
 import javax.inject.Inject
 
-class CitiesFragment: Fragment(),
-        LoadingView, CityAdapter.OnItemClickListener, RecyclerItemTouchHelperListener {
+class CitiesFragment : Fragment(),
+    LoadingView, CityAdapter.OnItemClickListener, RecyclerItemTouchHelperListener {
     private val progressBar: ContentLoadingProgressBar by bindView(R.id.progress_bar)
     private val tvError: TextView by bindView(R.id.tv_error)
 
@@ -54,7 +54,7 @@ class CitiesFragment: Fragment(),
         setHasOptionsMenu(true)
         AndroidApplication.injector.inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory)
-                                      .get(CitiesViewModel::class.java)
+            .get(CitiesViewModel::class.java)
         cityAdapter = CityAdapter(context, this)
 
         viewModel.cities.value?.let {
@@ -68,9 +68,11 @@ class CitiesFragment: Fragment(),
         })
     }
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_cities, container, false)
     }
 
@@ -82,7 +84,8 @@ class CitiesFragment: Fragment(),
         recyclerViewCities.itemAnimator = DefaultItemAnimator()
         recyclerViewCities.addItemDecoration(DividerItemDecoration(context, VERTICAL))
 
-        val itemTouchHelperCallback = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this)
+        val itemTouchHelperCallback =
+            RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerViewCities)
 
     }
@@ -104,10 +107,10 @@ class CitiesFragment: Fragment(),
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onClick(position: Int,  city: Forecast<Main, Coord>, animationTarget: ImageView) {
+    override fun onClick(position: Int, city: Forecast<Main, Coord>, animationTarget: ImageView) {
         val activity = context as? MainActivity
         val fm = activity?.supportFragmentManager
-        val cityFragment = CityFragment.newInstance(city.id, city.url)
+        val cityFragment = CityFragment.newInstance(city.id, city.url, city.cityDescription)
 
         cityFragment.postponeEnterTransition()
         cityFragment.sharedElementEnterTransition = ImageTransition()
@@ -116,40 +119,32 @@ class CitiesFragment: Fragment(),
         cityFragment.returnTransition = Fade()
 
         fm?.beginTransaction()
-                ?.addSharedElement(animationTarget, animationTarget.transitionName)
-                ?.replace(R.id.main_container, cityFragment, TAG_TAB_CITIES)
-                ?.addToBackStack(TAG_TAB_CITIES)
-                ?.commitAllowingStateLoss()
+            ?.addSharedElement(animationTarget, animationTarget.transitionName)
+            ?.replace(R.id.main_container, cityFragment, TAG_TAB_CITIES)
+            ?.addToBackStack(TAG_TAB_CITIES)
+            ?.commitAllowingStateLoss()
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
         if (viewHolder is CityAdapter.ViewHolder) {
-            //val ctx = activity.getApplicationContext()
-
-            // backup of removed item info for undo purpose
-            val deletedIndex = viewHolder.adapterPosition
-            val cityName = viewHolder.tvCityName.text
-
-            // get the id of removed item in database
-            val id: Int? = null
-            if (id != null) {
-                // remove the item from recycler view
-                //adapter.removeItem(deletedId, ctx)
+            val fragmentView = view as View
+            val deletedItemPosition = viewHolder.adapterPosition
+            val cityName = viewHolder.tvCityName.text.toString()
+            val city = cityAdapter?.deleteItem(cityName)
+            if (city != null) {
+                viewModel.deleteForecast(cityName)
+                val snackBar = Snackbar.make(
+                    fragmentView,
+                    getString(R.string.removed_item_notification, cityName),
+                    Snackbar.LENGTH_LONG
+                )
+                snackBar.setAction(R.string.undo) {
+                    cityAdapter?.restoreItem(deletedItemPosition, city)
+                    viewModel.insertForecast(city)
+                }
+                snackBar.setActionTextColor(Color.YELLOW)
+                snackBar.show()
             }
-
-            // Showing snack bar with undo option
-            // TODO: change it!
-            val snackBar = Snackbar.make(view!!,
-                            getString(R.string.removed_item_notification, cityName),
-                            Snackbar.LENGTH_LONG)
-            /*
-            snackBar.setAction(R.string.undo, View.OnClickListener {
-                // undo is selected, restore the deleted item
-                adapter.restoreItem(deletedId, name, email, ctx)
-            })
-            */
-            snackBar.setActionTextColor(Color.YELLOW)
-            snackBar.show()
         }
     }
 

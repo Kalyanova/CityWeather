@@ -67,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:textSize="24sp"
+                android:textSize="@dimen/middle_text_size"
                 android:padding="@dimen/padding"
                 tools:text="@tools:sample/cities" />
 
@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:textStyle="bold"
-                android:textSize="24sp"
+                android:textSize="@dimen/large_text_size"
                 android:padding="@dimen/padding"
                 android:text="@string/today_forecast"/>
 
@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:textSize="20sp"
+                android:textSize="@dimen/large_text_size"
                 android:padding="@dimen/padding"
                 android:text="@string/today_forecast"/>
 

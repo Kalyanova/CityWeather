@@ -17,17 +17,20 @@ import by.paranoidandroid.cityweather.formatDegrees
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
-class CityAdapter(private val context: Context?,
-                  private val clickListener: OnItemClickListener,
-                  private var cities: ArrayList<Forecast<Main, Coord>> = ArrayList()
+class CityAdapter(
+    private val context: Context?,
+    private val clickListener: OnItemClickListener,
+    private var cities: ArrayList<Forecast<Main, Coord>> = ArrayList()
 ) : RecyclerView.Adapter<CityAdapter.ViewHolder>() {
 
     override fun getItemCount() = cities.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val holder = ViewHolder(view = LayoutInflater
+        val holder = ViewHolder(
+            view = LayoutInflater
                 .from(context)
-                .inflate(R.layout.city_item, parent, false))
+                .inflate(R.layout.city_item, parent, false)
+        )
 
         holder.itemView.setOnClickListener {
             val position = holder.adapterPosition
@@ -47,19 +50,31 @@ class CityAdapter(private val context: Context?,
         holder.tvTemperature.text = cities[position].main?.temp?.formatDegrees()
 
         val requestOptions = RequestOptions()
-                .circleCrop()
-                .placeholder(R.drawable.city_placeholder)
-                .error(R.drawable.city_placeholder)
+            .circleCrop()
+            .placeholder(R.drawable.city_placeholder)
+            .error(R.drawable.city_placeholder)
         if (context != null) {
             Glide.with(context).setDefaultRequestOptions(requestOptions)
-                    .load(cities[position].url)
-                    .into(holder.ivFlag)
+                .load(cities[position].url)
+                .into(holder.ivFlag)
         }
     }
 
     fun updateItems(data: ForecastList) {
         cities.clear()
         cities.addAll(data)
+        notifyDataSetChanged()
+    }
+
+    fun deleteItem(cityName: String): Forecast<Main, Coord>? {
+        val city = cities.firstOrNull { it.name == cityName }
+        cities.remove(city)
+        notifyDataSetChanged()
+        return city
+    }
+
+    fun restoreItem(deletedItemPosition: Int, city: Forecast<Main, Coord>) {
+        cities.add(deletedItemPosition, city)
         notifyDataSetChanged()
     }
 
