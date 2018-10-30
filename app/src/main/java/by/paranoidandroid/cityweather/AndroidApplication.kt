@@ -42,17 +42,17 @@ class AndroidApplication : Application() {
             Log.d(LOG_TAG, "First launch")
             writeDB()
             prefs.edit()
-                    .putBoolean(FIRST_LAUNCH, false)
-                    .apply()
+                .putBoolean(FIRST_LAUNCH, false)
+                .apply()
         }
     }
 
     private fun buildComponent(): AppComponent {
         return DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .roomModule(RoomModule(this))
-                .retrofitModule(RetrofitModule())
-                .build()
+            .appModule(AppModule(this))
+            .roomModule(RoomModule(this))
+            .networkModule(NetworkModule())
+            .build()
     }
 
     companion object {

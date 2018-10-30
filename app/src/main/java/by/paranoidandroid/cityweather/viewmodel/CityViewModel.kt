@@ -14,11 +14,11 @@ class CityViewModel @Inject constructor(private val cityRepository: CityReposito
 
     private var forecast: LiveData<Forecast<Main, Coord>> ? = null
 
-    fun init(id: Int) {
+    fun init(id: Int, url: String?, cityDescription: String?) {
         if (this.forecast != null) {
             return
         }
-        forecast = cityRepository.getForecast(id)
+        forecast = cityRepository.getForecast(id, url, cityDescription)
     }
 
     fun getForecast() = forecast
@@ -31,6 +31,7 @@ class CityViewModel @Inject constructor(private val cityRepository: CityReposito
 class CityViewModelFactory @Inject constructor(val cityRepository: CityRepository) :
         ViewModelProvider.NewInstanceFactory() {
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return  CityViewModel(cityRepository) as T
     }

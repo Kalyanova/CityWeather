@@ -4,8 +4,8 @@ import by.paranoidandroid.cityweather.domain.entity.CityList
 import java.util.*
 
 data class RoomCityList(
-        override var cnt: Int,
-        override var list: Array<RoomForecast>
+    override var cnt: Int,
+    override var list: Array<RoomForecast>
 ) : CityList<RoomForecast>() {
 
     override fun equals(other: Any?): Boolean {

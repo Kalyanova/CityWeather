@@ -13,11 +13,11 @@ class RoomModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun provideAppDatabase() = Room.databaseBuilder(context,
-                                                    AppDatabase::class.java,
-                                                    AppDatabase.DATABASE_NAME)
-                                    .build()
-
+    fun provideAppDatabase() = Room.databaseBuilder(
+        context,
+        AppDatabase::class.java,
+        AppDatabase.DATABASE_NAME
+    ).build()
 
     @Provides
     @Singleton

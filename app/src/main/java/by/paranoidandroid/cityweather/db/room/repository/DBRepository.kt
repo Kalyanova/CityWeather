@@ -12,4 +12,15 @@ class DBRepository @Inject constructor(private val cityDao: CityDao) {
     fun getForecasts(): Single<List<RoomForecast>> = cityDao.getAll()
 
     fun update(vararg forecast: RoomForecast) = cityDao.insertAll(*forecast)
+
+    fun update(forecast: RoomForecast) =
+        cityDao.updateWithoutUrl(
+            forecast.id,
+            forecast.coord?.lon, forecast.coord?.lat,
+            forecast.main?.temp, forecast.main?.minTemp, forecast.main?.maxTemp
+        )
+
+    fun delete(cityName: String) = cityDao.delete(cityName)
+
+    fun insert(forecast: RoomForecast) = cityDao.insert(forecast)
 }

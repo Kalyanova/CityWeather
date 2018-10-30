@@ -13,28 +13,29 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
-class RetrofitModule {
+class NetworkModule {
 
     @Singleton
     @Provides
     fun provideRetrofit(): Retrofit {
         val logInterceptor = HttpLoggingInterceptor()
-                .setLevel(HttpLoggingInterceptor.Level.BASIC)
+            .setLevel(HttpLoggingInterceptor.Level.BASIC)
 
         val httpClient = OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
-                .addInterceptor(logInterceptor)
-                .build()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(logInterceptor)
+            .build()
 
         return Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(
-                        RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
-                .client(httpClient)
-                .build()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(
+                RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
+            )
+            .client(httpClient)
+            .build()
     }
 
     @Singleton

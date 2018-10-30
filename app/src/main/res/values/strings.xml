@@ -9,4 +9,15 @@
     <string name="content_descr_city_image">City image</string>
     <string name="test_temperature">4 °C</string>
 
+    <string name="image_transition">image_transition</string>
+
+    <string name="action_sync">Sync</string>
+    <string name="action_add_city">Add city</string>
+    <string name="action_show_error">Show error</string>
+
+    <string name="today_forecast">Today\'s Forecast</string>
+
+    <string name="delete">DELETE</string>
+    <string name="undo">Undo</string>
+    <string name="removed_item_notification">City %s is deleted</string>
 </resources>

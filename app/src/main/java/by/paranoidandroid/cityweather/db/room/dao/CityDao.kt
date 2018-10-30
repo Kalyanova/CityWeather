@@ -16,9 +16,17 @@ interface CityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg forecast: RoomForecast)
 
+    @Query("UPDATE city SET " +
+            "lon=:lon, lat=:lat, " +
+            "temp=:temp, temp_min=:minTemp, temp_max=:maxTemp " +
+            "WHERE id=:id")
+    fun updateWithoutUrl(id: Int,
+                         lon: Double?, lat: Double?,
+                         temp: String?, minTemp: String?, maxTemp: String?)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(forecast: RoomForecast)
 
-    @Delete
-    fun delete(forecast: RoomForecast)
+    @Query("DELETE FROM city WHERE name=:cityName")
+    fun delete(cityName: String)
 }
